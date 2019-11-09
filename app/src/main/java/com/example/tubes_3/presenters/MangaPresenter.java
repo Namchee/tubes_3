@@ -23,4 +23,8 @@ public class MangaPresenter {
     public Manga getManga(int idx) {
         return this.mangaList.get(idx);
     }
+
+    public int getSize() {
+        return this.mangaList.size();
+    }
 }

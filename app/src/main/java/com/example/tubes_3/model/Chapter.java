@@ -1,6 +1,5 @@
 package com.example.tubes_3.model;
 
-import java.security.Timestamp;
 import java.util.Date;
 
 public class Chapter {
@@ -9,11 +8,11 @@ public class Chapter {
 
     private Date lastUpdated;
 
-    public Chapter(String chapterNum, String id, String title, Timestamp lastUpdated) {
+    public Chapter(String chapterNum, String id, String title, Date lastUpdated) {
         this.chapterNum = chapterNum;
         this.id = id;
         this.title = title;
-        this.lastUpdated = lastUpdated.getTimestamp();
+        this.lastUpdated = lastUpdated;
     }
 
     public Date getLastUpdated() {

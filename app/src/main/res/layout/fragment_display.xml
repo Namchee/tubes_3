@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_bar"
+            app:iconifiedByDefault="false"
+            app:defaultQueryHint="@string/search_hint"
+            android:queryHint="@string/search_hint"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </Toolbar>
+    <GridView
+        android:id="@+id/manga_list"
+        android:gravity="center"
+        android:columnWidth="@dimen/manga_column_width"
+        android:clipToPadding="true"
+        android:fitsSystemWindows="true"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="@dimen/manga_view_spacing"
+        android:horizontalSpacing="@dimen/manga_view_spacing"
+        android:stretchMode="columnWidth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

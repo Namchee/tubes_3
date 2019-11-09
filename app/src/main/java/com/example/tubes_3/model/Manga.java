@@ -6,22 +6,23 @@ import java.util.Date;
 import java.util.List;
 
 public class Manga {
-    private int chaptersLength;
-    private String id, title, desc, imgUrl;
+    private int chaptersLength, hits;
+    private String id, title, desc, imgUrl, status;
     private List<String> categories;
 
     private Date created, lastUpdated;
 
     private List<Chapter> chapters;
 
-    public Manga(String id, String title, String imgUrl, Timestamp lastUpdated, List<String> categories, int chaptersLength) {
+    public Manga(String id, String title, String imgUrl, Date lastUpdated, List<String> categories, String status, int hits) {
         this.id = id;
         this.title = title;
-        this.lastUpdated = lastUpdated.getTimestamp();
+        this.lastUpdated = lastUpdated;
         this.imgUrl = imgUrl;
 
         this.categories = categories;
-        this.chaptersLength = chaptersLength;
+        this.status = status;
+        this.hits = hits;
 
         this.chapters = new ArrayList<>();
     }
@@ -34,8 +35,16 @@ public class Manga {
         this.desc = desc;
     }
 
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
     public void setCreated(Timestamp created) {
         this.created = created.getTimestamp();
+    }
+
+    public void setChaptersLength(int chaptersLength) {
+        this.chaptersLength = chaptersLength;
     }
 
     public String getId() {
@@ -68,5 +77,17 @@ public class Manga {
 
     public String getDesc() {
         return desc;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public int getHits() {
+        return hits;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }

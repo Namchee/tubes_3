@@ -7,6 +7,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.tubes_3.R;
+import com.example.tubes_3.fragments.home.DisplayFragment;
 import com.example.tubes_3.model.URL_BASE;
 import com.example.tubes_3.presenters.MangaPresenter;
 
@@ -37,13 +40,8 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment implements Response.Listener<JSONObject>, Response.ErrorListener {
-    @BindView(R.id.manga_view) GridView mangaView;
-
-    int currentPage;
-    Unbinder unbinder;
-
-    MangaPresenter presenter;
+public class HomeFragment extends Fragment {
+    FragmentManager homeFm;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -55,68 +53,17 @@ public class HomeFragment extends Fragment implements Response.Listener<JSONObje
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        this.currentPage = 0;
-        this.unbinder = ButterKnife.bind(view);
+        this.homeFm = this.getChildFragmentManager();
+        FragmentTransaction ft = this.homeFm.beginTransaction();
 
-        this.presenter = new MangaPresenter();
+        DisplayFragment displayFragment = new DisplayFragment();
+
+        ft.add(R.id.home_fragment_container, displayFragment,"");
+
+        ft.commit();
 
         return view;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
-        String baseApi = URL_BASE.API.getUrl();
-        StringBuilder stringBuilder = new StringBuilder(baseApi);
-
-        stringBuilder.append("?p=" + this.currentPage);
-
-        this.requestManga(stringBuilder.toString());
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        this.unbinder.unbind();
-    }
-
-    private void requestManga(String location) {
-        try {
-            RequestQueue queue = Volley.newRequestQueue(this.getContext());
-
-            JsonObjectRequest request = new JsonObjectRequest(
-                    Request.Method.GET,
-                    location,
-                    null,
-                    this,
-                    this
-                    );
-
-            queue.add(request);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override
-    public void onResponse(JSONObject response) {
-        try {
-            JSONArray array = response.getJSONArray("manga");
-
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject rawObject = array.getJSONObject(i);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onErrorResponse(VolleyError error) {
-
-    }
 }

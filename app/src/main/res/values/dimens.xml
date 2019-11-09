@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="small_padding">8dp</dimen>
+    <dimen name="medium_padding">12dp</dimen>
     <dimen name="manga_column_width">150dp</dimen>
-    <dimen name="manga_column_height">250dp</dimen>
+    <dimen name="manga_view_spacing">2dp</dimen>
+    <dimen name="title_size">24sp</dimen>
+    <dimen name="subtitle_size">16sp</dimen>
 </resources>
