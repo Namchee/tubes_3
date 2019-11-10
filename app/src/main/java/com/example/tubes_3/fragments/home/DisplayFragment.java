@@ -144,7 +144,7 @@ public class DisplayFragment extends Fragment implements Response.Listener<JSONO
             String title = rawObject.getString("t");
             String imgUrl = "";
 
-            if (rawObject.has("im") && rawObject.getString("im") != null) {
+            if (rawObject.has("im") && rawObject.getString("im") != "null") {
                 imgUrl = URL_BASE.IMAGE_SRC.getUrl() + rawObject.getString("im");
             }
 

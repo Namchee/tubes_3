@@ -18,6 +18,7 @@
             android:layout_height="match_parent" />
     </Toolbar>
     <GridView
+        android:padding="@dimen/small_padding"
         android:id="@+id/manga_list"
         android:gravity="center"
         android:columnWidth="@dimen/manga_column_width"

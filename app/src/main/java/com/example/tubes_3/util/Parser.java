@@ -7,8 +7,9 @@ public class Parser {
         Date date = null;
 
         try {
-            long time = Long.parseLong(timestamp);
-            date = new java.util.Date(time*1000L);
+            long time = Double.valueOf(timestamp).longValue();
+
+            date = new java.util.Date(time * 1000L);
         } catch(Exception e) {
             e.printStackTrace();
         }
