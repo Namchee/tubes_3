@@ -4,6 +4,7 @@
     android:weightSum="7"
     android:layout_height="@dimen/manga_column_height">
     <ImageView
+        android:adjustViewBounds="true"
         android:id="@+id/manga_pic"
         android:layout_width="match_parent"
         android:scaleType="fitCenter"

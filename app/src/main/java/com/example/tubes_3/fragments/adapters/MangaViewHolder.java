@@ -3,11 +3,15 @@ package com.example.tubes_3.fragments.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.core.graphics.drawable.WrappedDrawable;
 
 import com.example.tubes_3.R;
 import com.example.tubes_3.model.Manga;

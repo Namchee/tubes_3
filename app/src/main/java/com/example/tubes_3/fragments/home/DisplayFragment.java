@@ -1,16 +1,19 @@
 package com.example.tubes_3.fragments.home;
 
-
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.android.volley.Request;
@@ -25,6 +28,7 @@ import com.example.tubes_3.model.Manga;
 import com.example.tubes_3.model.URL_BASE;
 import com.example.tubes_3.presenters.MangaPresenter;
 import com.example.tubes_3.util.Parser;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -40,12 +44,14 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DisplayFragment extends Fragment implements Response.Listener<JSONObject>, Response.ErrorListener {
+public class DisplayFragment extends Fragment implements Response.Listener<JSONObject>, Response.ErrorListener, Spinner.OnItemSelectedListener {
     @BindView(R.id.manga_list) GridView mangaView;
     @BindView(R.id.search_bar) SearchView searchInput;
     @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.page_sum) TextView pageSum;
+    @BindView(R.id.progress_loader) ProgressBar progressBar;
+    @BindView(R.id.sort_category) Spinner sortCategory;
 
-    int currentPage;
     Unbinder unbinder;
 
     MangaPresenter presenter;
@@ -59,31 +65,34 @@ public class DisplayFragment extends Fragment implements Response.Listener<JSONO
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        this.setRetainInstance(true);
+
         View view = inflater.inflate(R.layout.fragment_display, container, false);
 
-        this.currentPage = 0;
         this.unbinder = ButterKnife.bind(this, view);
-
-        this.presenter = new MangaPresenter();
-        this.adapter = new MangaAdapter(this.getContext(), this.presenter);
-
-        this.mangaView.setAdapter(this.adapter);
-
-        return view;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
         this.setToolbar();
 
-        String baseApi = URL_BASE.API.getUrl();
-        StringBuilder stringBuilder = new StringBuilder(baseApi);
+        if (savedInstanceState != null) {
+            Gson gson = new Gson();
+            this.presenter = gson.fromJson(savedInstanceState.getString("manga_list"), MangaPresenter.class);
 
-        stringBuilder.append("?p=" + this.currentPage);
+            this.adapter = new MangaAdapter(this.getContext(), this.presenter);
+        } else {
+            this.presenter = new MangaPresenter();
+            this.adapter = new MangaAdapter(this.getContext(), this.presenter);
 
-        this.requestManga(stringBuilder.toString());
+            this.mangaView.setAdapter(this.adapter);
+
+            String baseApi = URL_BASE.API.getUrl();
+            StringBuilder stringBuilder = new StringBuilder(baseApi);
+
+            this.requestManga(stringBuilder.toString());
+        }
+
+        this.sortCategory.setOnItemSelectedListener(this);
+
+        return view;
     }
 
     @Override
@@ -114,6 +123,8 @@ public class DisplayFragment extends Fragment implements Response.Listener<JSONO
 
     @Override
     public void onResponse(JSONObject response) {
+        this.progressBar.setVisibility(View.GONE);
+
         try {
             JSONArray array = response.getJSONArray("manga");
 
@@ -123,6 +134,7 @@ public class DisplayFragment extends Fragment implements Response.Listener<JSONO
                 this.pushManga(rawObject);
             }
 
+            this.pageSum.setText(this.presenter.getSize() + " manga(s)");
             this.adapter.notifyDataSetChanged();
         } catch (Exception e) {
             e.printStackTrace();
@@ -164,7 +176,6 @@ public class DisplayFragment extends Fragment implements Response.Listener<JSONO
             String status = Parser.parseStatus(Integer.parseInt(rawObject.getString("s")));
             int hits = Integer.parseInt(rawObject.getString("h"));
 
-
             Manga manga = new Manga(id, title, imgUrl, lastUpdated, categories, status, hits);
 
             this.presenter.addManga(manga);
@@ -172,5 +183,26 @@ public class DisplayFragment extends Fragment implements Response.Listener<JSONO
             e.printStackTrace();
             System.exit(1);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        Gson gson = new Gson();
+        outState.putString("manga_list", gson.toJson(this.presenter));
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        switch (i) {
+            case 1:
+                this.adapter.fil
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        this.sortCategory.setSelection(1);
     }
 }
