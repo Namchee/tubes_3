@@ -1,17 +1,11 @@
 package com.example.tubes_3.fragments.adapters;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ScaleDrawable;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.core.graphics.drawable.WrappedDrawable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tubes_3.R;
 import com.example.tubes_3.model.Manga;
@@ -20,12 +14,13 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MangaViewHolder {
+public class MangaViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.manga_pic) ImageView mangaPic;
     @BindView(R.id.manga_title) TextView mangaTitle;
     @BindView(R.id.manga_status) TextView mangaStatus;
 
     public MangaViewHolder(View view) {
+        super(view);
         ButterKnife.bind(this, view);
     }
 

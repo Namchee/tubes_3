@@ -46,7 +46,7 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment implements FragmentListener, BottomNavigationView.OnNavigationItemSelectedListener {
+public class HomeFragment extends Fragment implements FragmentListener, BottomNavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnNavigationItemReselectedListener {
     FragmentManager homeFm;
 
     BottomNavigationView navigationView;
@@ -67,8 +67,6 @@ public class HomeFragment extends Fragment implements FragmentListener, BottomNa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        this.setRetainInstance(true);
-
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         this.homeFm = this.getChildFragmentManager();
@@ -77,16 +75,18 @@ public class HomeFragment extends Fragment implements FragmentListener, BottomNa
 
         if (savedInstanceState != null) {
             this.displayFragment = (DisplayFragment)this.homeFm.findFragmentByTag("display");
+            this.favoriteFragment = (FavoriteFragment)this.homeFm.findFragmentByTag("favorites");
+            this.historyFragment = (HistoryFragment)this.homeFm.findFragmentByTag("history");
         } else {
             this.displayFragment = new DisplayFragment();
+            this.favoriteFragment = new FavoriteFragment();
+            this.historyFragment = new HistoryFragment();
         }
-
-        this.favoriteFragment = new FavoriteFragment();
-        this.historyFragment = new HistoryFragment();
 
         this.changePage(DISPLAY_ID);
 
         this.navigationView.setOnNavigationItemSelectedListener(this);
+        this.navigationView.setOnNavigationItemReselectedListener(this);
 
         return view;
     }
@@ -138,6 +138,11 @@ public class HomeFragment extends Fragment implements FragmentListener, BottomNa
         }
 
         return true;
+    }
+
+    @Override
+    public void onNavigationItemReselected(@NonNull MenuItem menuItem) {
+        // Do nothing
     }
 
     @Override

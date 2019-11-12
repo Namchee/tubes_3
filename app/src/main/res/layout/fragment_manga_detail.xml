@@ -1,25 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:padding="@dimen/medium_padding"
-    android:layout_height="match_parent">
-    <ImageView
-        android:id="@+id/detail_manga_picture"
-        android:layout_centerHorizontal="true"
-        android:layout_width="150dp"
-        android:layout_height="200dp" />
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="3"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout
-        android:layout_below="@id/detail_manga_picture"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/detail_manga_title"
-            android:textAlignment="center"
+        android:padding="@dimen/medium_padding"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <ImageView
+            android:id="@+id/detail_manga_picture"
+            android:layout_centerHorizontal="true"
+            android:layout_width="150dp"
+            android:layout_height="200dp" />
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/title_size" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="asu"
+                android:id="@+id/detail_manga_title"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:textSize="@dimen/title_size" />
+            <TextView
+                android:id="@+id/detail_manga_author"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:id="@+id/detail_manga_status" />
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@android:color/transparent"
+                android:id="@+id/favorite_button" />
+        </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+    <LinearLayout
+        android:padding="@dimen/medium_padding"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_marginBottom="@dimen/small_padding"
+            android:text="@string/details_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/detail_manga_synopsis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <TextView
+            android:text="@string/chapters_label"
+            android:layout_marginBottom="@dimen/small_padding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <ListView
+            android:padding="@dimen/small_padding"
+            android:id="@+id/detail_manga_chapters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>
