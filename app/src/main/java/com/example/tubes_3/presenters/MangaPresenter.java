@@ -1,30 +1,34 @@
 package com.example.tubes_3.presenters;
 
-import com.example.tubes_3.model.Manga;
+import com.example.tubes_3.model.MangaRaw;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MangaPresenter {
-    private List<Manga> mangaList;
+    private List<MangaRaw> mangaRawList;
 
     public MangaPresenter() {
-        this.mangaList = new ArrayList<>();
+        this.mangaRawList = new ArrayList<>();
     }
 
-    public void addManga(Manga manga) {
-        this.mangaList.add(manga);
+    public void addManga(MangaRaw mangaRaw) {
+        this.mangaRawList.add(mangaRaw);
     }
 
-    public List<Manga> getMangaList() {
-        return this.mangaList;
+    public List<MangaRaw> getMangaRawList() {
+        return this.mangaRawList;
     }
 
-    public Manga getManga(int idx) {
-        return this.mangaList.get(idx);
+    public MangaRaw getManga(int idx) {
+        return this.mangaRawList.get(idx);
     }
 
     public int getSize() {
-        return this.mangaList.size();
+        return this.mangaRawList.size();
+    }
+
+    public void clearPresenter() {
+        this.mangaRawList.clear();
     }
 }

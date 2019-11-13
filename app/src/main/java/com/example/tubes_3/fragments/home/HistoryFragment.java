@@ -11,15 +11,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.tubes_3.R;
+import com.example.tubes_3.presenters.MangaPresenter;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class HistoryFragment extends Fragment {
-
+    MangaPresenter presenter;
 
     public HistoryFragment() {
         // Required empty public constructor
+    }
+
+    public HistoryFragment(MangaPresenter presenter) {
+        this.presenter = presenter;
     }
 
 

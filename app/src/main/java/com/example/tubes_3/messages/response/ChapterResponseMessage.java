@@ -3,15 +3,17 @@ package com.example.tubes_3.messages.response;
 import com.example.tubes_3.messages.ResponseMessage;
 import com.example.tubes_3.model.Chapter;
 
-public class ChapterResponseMessage extends ResponseMessage {
-    private Chapter chapterDetail;
+import java.util.List;
 
-    public ChapterResponseMessage(Chapter chapterDetail) {
+public class ChapterResponseMessage extends ResponseMessage {
+    private List<String> imageList;
+
+    public ChapterResponseMessage(List<String> imageList) {
         super(RESPONSE_DETAIL);
-        this.chapterDetail = chapterDetail;
+        this.imageList = imageList;
     }
 
-    public Chapter getChapterDetail() {
-        return this.chapterDetail;
+    public List<String> getImageList() {
+        return imageList;
     }
 }

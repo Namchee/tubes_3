@@ -8,8 +8,11 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tubes_3.R;
-import com.example.tubes_3.model.Manga;
+import com.example.tubes_3.messages.request.MangaDetailRequestMessage;
+import com.example.tubes_3.model.MangaRaw;
 import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,14 +27,18 @@ public class MangaViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, view);
     }
 
-    public void setManga(Manga manga) {
-        if (manga.getImgUrl() != null && manga.getImgUrl() != "") {
-            Picasso.get().load(Uri.decode(manga.getImgUrl())).placeholder(R.drawable.ic_progress_animation).into(this.mangaPic);
+    public void setManga(MangaRaw mangaRaw) {
+        if (mangaRaw.getImgUrl() != null && mangaRaw.getImgUrl() != "") {
+            Picasso.get().load(Uri.decode(mangaRaw.getImgUrl())).placeholder(R.drawable.ic_progress_animation).into(this.mangaPic);
         } else {
             this.mangaPic.setImageResource(R.drawable.ic_no);
         }
 
-        this.mangaTitle.setText(manga.getTitle());
-        this.mangaStatus.setText(manga.getStatus());
+        this.mangaTitle.setText(mangaRaw.getTitle());
+        this.mangaStatus.setText(mangaRaw.getStatus());
+
+        this.itemView.setOnClickListener((View view) -> {
+            EventBus.getDefault().postSticky(new MangaDetailRequestMessage(mangaRaw));
+        });
     }
 }

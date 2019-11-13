@@ -59,15 +59,14 @@ public class DisplayFragment extends Fragment {
         this.unbinder = ButterKnife.bind(this, view);
 
         this.mangaView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
-
         this.setToolbar();
 
         this.adapter = new MangaAdapter(this.getContext(), this.presenter);
-
         this.mangaView.setAdapter(this.adapter);
 
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this.getContext(), R.array.sort_criteria, android.R.layout.simple_spinner_dropdown_item);
+        this.setPageSum(this.presenter.getSize());
 
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this.getContext(), R.array.sort_criteria, android.R.layout.simple_spinner_dropdown_item);
         this.sortCategory.setAdapter(arrayAdapter);
 
         // this.sortCategory.setOnItemSelectedListener(this);
@@ -102,4 +101,17 @@ public class DisplayFragment extends Fragment {
         this.sortCategory.setSelection(1);
     }
      */
+
+    public void setPageSum(int size) {
+        this.pageSum.setText(size + " manga(s)");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        this.adapter.clearData();
+        this.setPageSum(0);
+        this.adapter.notifyDataSetChanged();
+    }
 }

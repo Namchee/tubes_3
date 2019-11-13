@@ -11,13 +11,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.tubes_3.R;
+import com.example.tubes_3.model.MangaDetail;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MangaReadFragment extends Fragment {
-
-
     public MangaReadFragment() {
         // Required empty public constructor
     }

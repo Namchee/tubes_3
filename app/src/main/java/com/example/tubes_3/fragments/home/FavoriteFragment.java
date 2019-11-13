@@ -11,15 +11,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.tubes_3.R;
+import com.example.tubes_3.presenters.MangaPresenter;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class FavoriteFragment extends Fragment {
-
+    MangaPresenter presenter;
 
     public FavoriteFragment() {
         // Required empty public constructor
+    }
+
+    public FavoriteFragment(MangaPresenter presenter) {
+        this.presenter = presenter;
     }
 
 

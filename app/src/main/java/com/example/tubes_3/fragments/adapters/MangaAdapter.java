@@ -9,7 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tubes_3.R;
+import com.example.tubes_3.model.MangaRaw;
 import com.example.tubes_3.presenters.MangaPresenter;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class MangaAdapter extends RecyclerView.Adapter<MangaViewHolder> {
     private MangaPresenter presenter;
@@ -47,5 +50,9 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaViewHolder> {
     @Override
     public int getItemViewType(int position) {
         return position;
+    }
+
+    public void clearData() {
+        this.presenter.clearPresenter();
     }
 }

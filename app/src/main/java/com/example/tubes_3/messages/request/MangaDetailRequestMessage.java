@@ -1,17 +1,17 @@
 package com.example.tubes_3.messages.request;
 
-import com.example.tubes_3.model.Manga;
+import com.example.tubes_3.model.MangaRaw;
 import com.example.tubes_3.messages.RequestMessage;
 
 public class MangaDetailRequestMessage extends RequestMessage {
-    private final Manga manga;
+    private final MangaRaw mangaRaw;
 
-    public MangaDetailRequestMessage(Manga manga) {
+    public MangaDetailRequestMessage(MangaRaw mangaRaw) {
         super(REQUEST_DETAIL);
-        this.manga = manga;
+        this.mangaRaw = mangaRaw;
     }
 
-    public Manga getManga() {
-        return manga;
+    public MangaRaw getMangaRaw() {
+        return mangaRaw;
     }
 }

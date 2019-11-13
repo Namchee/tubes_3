@@ -1,17 +1,18 @@
 package com.example.tubes_3.messages.response;
 
 import com.example.tubes_3.messages.ResponseMessage;
-import com.example.tubes_3.model.Manga;
+import com.example.tubes_3.model.MangaDetail;
+import com.example.tubes_3.model.MangaRaw;
 
 public class MangaDetailResponseMessage extends ResponseMessage {
-    public Manga mangaDetail;
+    public MangaDetail mangaRawDetail;
 
-    public MangaDetailResponseMessage(Manga mangaDetail) {
+    public MangaDetailResponseMessage(MangaDetail mangaRawDetail) {
         super(RESPONSE_DETAIL);
-        this.mangaDetail = mangaDetail;
+        this.mangaRawDetail = mangaRawDetail;
     }
 
-    public Manga getMangaDetail() {
-        return this.mangaDetail;
+    public MangaDetail getMangaRawDetail() {
+        return this.mangaRawDetail;
     }
 }
