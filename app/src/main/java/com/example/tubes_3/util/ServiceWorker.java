@@ -6,14 +6,14 @@ import com.android.volley.Cache;
 import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.tubes_3.messages.response.MangaAllResponseMessage;
 import com.example.tubes_3.model.Manga;
-import com.example.tubes_3.model.RequestMessage;
+import com.example.tubes_3.messages.RequestMessage;
 import com.example.tubes_3.model.URL_BASE;
 
 import org.greenrobot.eventbus.EventBus;
@@ -37,42 +37,46 @@ public class ServiceWorker {
         this.requestQueue = new RequestQueue(cache, network);
     }
 
-    @Subscribe
-    public void requestManga(RequestMessage requestMessage) {
-        if (requestMessage.getMessageType() == 0) {
-            String location = URL_BASE.API.getUrl();
-            List<Manga> mangaList = new ArrayList<>();
+    public static synchronized ServiceWorker getInstance(Context ctx) {
+        if (instance == null) {
+            instance = new ServiceWorker(ctx);
+        }
 
-            try {
-                JsonObjectRequest request = new JsonObjectRequest(
-                        Request.Method.GET,
-                        location,
-                        null,
-                        (JSONObject response) -> {
-                            try {
-                                JSONArray jsonArray = response.getJSONArray("manga");
+        return instance;
+    }
 
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject rawObject = jsonArray.getJSONObject(i);
+    public void getAllManga() {
+        String location = URL_BASE.API.getUrl();
+        List<Manga> mangaList = new ArrayList<>();
 
-                                    mangaList.add(this.convertToManga(rawObject));
-                                }
+        try {
+            JsonObjectRequest request = new JsonObjectRequest(
+                    Request.Method.GET,
+                    location,
+                    null,
+                    (JSONObject response) -> {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("manga");
 
-                                EventBus.getDefault().post();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject rawObject = jsonArray.getJSONObject(i);
+
+                                mangaList.add(this.convertToManga(rawObject));
                             }
 
-                        },
-                        (VolleyError error) -> {
-                            // DO NOTHING
+                            EventBus.getDefault().post(new MangaAllResponseMessage(mangaList));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
+                        },
+                    (VolleyError error) -> {
+                        // DO NOTHING
+                    }
                 );
 
                 this.requestQueue.add(request);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -112,11 +116,7 @@ public class ServiceWorker {
         return manga;
     }
 
-    public static synchronized ServiceWorker getInstance(Context ctx) {
-        if (instance == null) {
-            instance = new ServiceWorker(ctx);
-        }
-
-        return instance;
+    public void getMangaDetail(String mangaId) {
+        String location = URL_BASE.
     }
 }

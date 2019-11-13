@@ -7,6 +7,12 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 
 import com.example.tubes_3.fragments.HomeFragment;
+import com.example.tubes_3.messages.RequestMessage;
+import com.example.tubes_3.messages.request.MangaDetailRequestMessage;
+import com.example.tubes_3.util.ServiceWorker;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 public class MainActivity extends AppCompatActivity {
     FragmentManager fragmentManager;
@@ -24,5 +30,31 @@ public class MainActivity extends AppCompatActivity {
         ft.add(R.id.fragment_container, homeFragment, "");
 
         ft.commit();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe
+    public void handleRequestMessage(RequestMessage message) {
+        switch (message.getMessageType()) {
+            case 0: {
+                ServiceWorker.getInstance(this.getApplicationContext()).getAllManga();
+            }
+            case 1: {
+                MangaDetailRequestMessage mangaDetailRequestMessage = (MangaDetailRequestMessage)message;
+
+                ServiceWorker.getInstance(this.getApplicationContext())
+            }
+        }
     }
 }

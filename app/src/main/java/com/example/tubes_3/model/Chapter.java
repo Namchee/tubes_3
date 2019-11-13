@@ -1,6 +1,8 @@
 package com.example.tubes_3.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Chapter {
     private String chapterNum;
@@ -8,11 +10,15 @@ public class Chapter {
 
     private Date lastUpdated;
 
+    private List<String> imgUrl;
+
     public Chapter(String chapterNum, String id, String title, Date lastUpdated) {
         this.chapterNum = chapterNum;
         this.id = id;
         this.title = title;
         this.lastUpdated = lastUpdated;
+
+        this.imgUrl = new ArrayList<>();
     }
 
     public Date getLastUpdated() {
@@ -29,5 +35,9 @@ public class Chapter {
 
     public String getTitle() {
         return title;
+    }
+
+    public void addImgUrl(String url) {
+        this.imgUrl.add(url);
     }
 }
