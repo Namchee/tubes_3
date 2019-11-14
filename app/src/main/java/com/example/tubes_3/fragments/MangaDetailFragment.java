@@ -22,6 +22,7 @@ import com.example.tubes_3.messages.request.MangaDetailRequestMessage;
 import com.example.tubes_3.messages.response.MangaDetailResponseMessage;
 import com.example.tubes_3.model.MangaDetail;
 import com.example.tubes_3.model.MangaRaw;
+import com.example.tubes_3.util.ServiceWorker;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
@@ -45,7 +46,7 @@ public class MangaDetailFragment extends Fragment {
     @BindView(R.id.detail_manga_status) TextView tvStatus;
     @BindView(R.id.detail_manga_synopsis) TextView tvSynopsis;
     @BindView(R.id.detail_manga_chapters) ListView lvChapters;
-    // @BindView(R.id.detail_progress_loader) ProgressBar loader;
+    @BindView(R.id.detail_progress_loader) ProgressBar loader;
 
     Unbinder unbinder;
 
@@ -80,12 +81,14 @@ public class MangaDetailFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        // this.loader.setVisibility(View.VISIBLE);
-
         EventBus.getDefault().register(this);
+
+        this.loader.setVisibility(View.VISIBLE);
 
         this.getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+        ServiceWorker.getInstance(this.getContext()).getMangaDetail(mangaRaw.getId());
     }
 
     @Override
@@ -97,6 +100,8 @@ public class MangaDetailFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleMangaDetailResponseMessage(MangaDetailResponseMessage mangaDetailResponseMessage) {
+        this.loader.setVisibility(View.GONE);
+
         this.getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
         MangaDetail mangaDetail = mangaDetailResponseMessage.getMangaRawDetail();

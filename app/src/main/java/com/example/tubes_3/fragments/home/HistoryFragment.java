@@ -17,8 +17,6 @@ import com.example.tubes_3.presenters.MangaPresenter;
  * A simple {@link Fragment} subclass.
  */
 public class HistoryFragment extends Fragment {
-    MangaPresenter presenter;
-
     public HistoryFragment() {
         // Required empty public constructor
     }

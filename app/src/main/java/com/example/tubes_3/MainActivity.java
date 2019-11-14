@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
 
         ft.commit();
 
-        ServiceWorker.getInstance(this.getApplicationContext()).getMangaDetail(mangaRaw.getId());
     }
 
     public void handleToChapterRead() {

@@ -9,5 +9,5 @@
     <dimen name="title_size">16sp</dimen>
     <dimen name="big_title_size">18sp</dimen>
     <dimen name="subtitle_size">12sp</dimen>
-    <dimen name="extralarge_title_size">36sp</dimen>
+    <dimen name="extralarge_title_size">20sp</dimen>
 </resources>

@@ -89,9 +89,6 @@ public class DisplayFragment extends Fragment {
 
         this.loader.setVisibility(View.VISIBLE);
 
-        this.getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
         EventBus.getDefault().postSticky(new RequestMessage());
     }
 
@@ -129,6 +126,7 @@ public class DisplayFragment extends Fragment {
     @Subscribe
     public void handleMangaAllResponseMessage(MangaAllResponseMessage mangaAllResponseMessage) {
         this.loader.setVisibility(View.GONE);
+
         this.getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
         this.presenter = new MangaPresenter();
