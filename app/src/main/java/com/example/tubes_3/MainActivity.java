@@ -18,6 +18,7 @@ import com.example.tubes_3.messages.request.ChapterRequestMessage;
 import com.example.tubes_3.messages.request.MangaDetailRequestMessage;
 import com.example.tubes_3.messages.response.MangaDetailResponseMessage;
 import com.example.tubes_3.model.MangaDetail;
+import com.example.tubes_3.model.MangaRaw;
 import com.example.tubes_3.util.ServiceWorker;
 
 import org.greenrobot.eventbus.EventBus;
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         this.homeFragment = new HomeFragment();
 
-        ft.add(R.id.fragment_container, homeFragment, "");
+        ft.add(R.id.fragment_container, homeFragment, "").addToBackStack("home");
 
         ft.commit();
     }
@@ -63,41 +64,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void handleRequestMessage(Object message) {
-        if (message instanceof RequestMessage) {
-            RequestMessage requestMessage = (RequestMessage)message;
-
-            switch (requestMessage.getMessageType()) {
-                case RequestMessage.REQUEST_ALL: {
-                    ServiceWorker.getInstance(this.getApplicationContext()).getAllManga();
-                    break;
-                }
-                case RequestMessage.REQUEST_DETAIL: {
-                    MangaDetailRequestMessage mangaDetailRequestMessage = (MangaDetailRequestMessage)requestMessage;
-
-                    ServiceWorker.getInstance(this.getApplicationContext()).getMangaDetail(mangaDetailRequestMessage.getMangaRaw().getId());
-                    break;
-                }
-                case RequestMessage.REQUEST_CHAPTER: {
-                    ChapterRequestMessage chapterRequestMessage = (ChapterRequestMessage)requestMessage;
-
-                    ServiceWorker.getInstance(this.getApplicationContext()).getChapterImages(chapterRequestMessage.getChapter().getId());
-                    break;
-                }
+    public void handleRequestMessage(RequestMessage message) {
+        switch (message.getMessageType()) {
+            case RequestMessage.REQUEST_ALL: {
+                ServiceWorker.getInstance(this.getApplicationContext()).getAllManga();
+                break;
             }
-        } else if (message instanceof ResponseMessage) {
-            ResponseMessage responseMessage = (ResponseMessage)message;
+            case RequestMessage.REQUEST_DETAIL: {
+                MangaDetailRequestMessage mangaDetailRequestMessage = (MangaDetailRequestMessage)message;
 
-            switch (responseMessage.getMessageType()) {
-                case ResponseMessage.RESPONSE_DETAIL:
-                    this.handleMangaDetailMessage((MangaDetailResponseMessage)responseMessage);
-                    break;
+                this.handleToMangaDetail(mangaDetailRequestMessage.getMangaRaw());
+
+                break;
+            }
+            case RequestMessage.REQUEST_CHAPTER: {
+                ChapterRequestMessage chapterRequestMessage = (ChapterRequestMessage)message;
+
+                this.handleToChapterRead();
+                break;
             }
         }
-
     }
 
-    public void handleMangaDetailMessage(MangaDetailResponseMessage responseMessage) {
+    public void handleToMangaDetail(MangaRaw mangaRaw) {
         FragmentTransaction ft = this.fragmentManager.beginTransaction();
 
         ft.setCustomAnimations(R.anim.fragment_animation_in, R.anim.fragment_animation_out);
@@ -110,10 +99,16 @@ public class MainActivity extends AppCompatActivity {
             ft.hide(this.mangaReadFragment);
         }
 
-        this.mangaDetailFragment = new MangaDetailFragment(responseMessage.getMangaRawDetail());
+        this.mangaDetailFragment = new MangaDetailFragment(mangaRaw);
 
-        ft.add(R.id.fragment_container, this.mangaReadFragment, null);
+        ft.add(R.id.fragment_container, this.mangaDetailFragment, null).addToBackStack("details");
 
         ft.commit();
+
+        ServiceWorker.getInstance(this.getApplicationContext()).getMangaDetail(mangaRaw.getId());
+    }
+
+    public void handleToChapterRead() {
+        //TODO: implement!
     }
 }

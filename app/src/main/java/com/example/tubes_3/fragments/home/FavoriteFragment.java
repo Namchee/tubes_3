@@ -17,16 +17,9 @@ import com.example.tubes_3.presenters.MangaPresenter;
  * A simple {@link Fragment} subclass.
  */
 public class FavoriteFragment extends Fragment {
-    MangaPresenter presenter;
-
     public FavoriteFragment() {
         // Required empty public constructor
     }
-
-    public FavoriteFragment(MangaPresenter presenter) {
-        this.presenter = presenter;
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

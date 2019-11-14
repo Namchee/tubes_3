@@ -11,14 +11,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.example.tubes_3.R;
 import com.example.tubes_3.fragments.adapters.MangaAdapter;
+import com.example.tubes_3.messages.RequestMessage;
+import com.example.tubes_3.messages.response.MangaAllResponseMessage;
+import com.example.tubes_3.model.MangaRaw;
 import com.example.tubes_3.presenters.MangaPresenter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,7 +42,7 @@ public class DisplayFragment extends Fragment {
     @BindView(R.id.search_bar) SearchView searchInput;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.page_sum) TextView pageSum;
-    // @BindView(R.id.progress_loader) ProgressBar progressBar;
+    @BindView(R.id.display_progress_loader) ProgressBar loader;
     @BindView(R.id.sort_category) Spinner sortCategory;
 
     Unbinder unbinder;
@@ -42,11 +52,6 @@ public class DisplayFragment extends Fragment {
 
     public DisplayFragment() {
         // Required empty public constructor
-    }
-
-    public DisplayFragment(MangaPresenter presenter) {
-        // because bundle sucks
-        this.presenter = presenter;
     }
 
     @Override
@@ -61,11 +66,6 @@ public class DisplayFragment extends Fragment {
         this.mangaView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
         this.setToolbar();
 
-        this.adapter = new MangaAdapter(this.getContext(), this.presenter);
-        this.mangaView.setAdapter(this.adapter);
-
-        this.setPageSum(this.presenter.getSize());
-
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this.getContext(), R.array.sort_criteria, android.R.layout.simple_spinner_dropdown_item);
         this.sortCategory.setAdapter(arrayAdapter);
 
@@ -79,6 +79,26 @@ public class DisplayFragment extends Fragment {
         super.onDestroyView();
 
         this.unbinder.unbind();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        EventBus.getDefault().register(this);
+
+        this.loader.setVisibility(View.VISIBLE);
+
+        this.getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+        EventBus.getDefault().postSticky(new RequestMessage());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     private void setToolbar() {
@@ -106,12 +126,21 @@ public class DisplayFragment extends Fragment {
         this.pageSum.setText(size + " manga(s)");
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
+    @Subscribe
+    public void handleMangaAllResponseMessage(MangaAllResponseMessage mangaAllResponseMessage) {
+        this.loader.setVisibility(View.GONE);
+        this.getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
-        this.adapter.clearData();
-        this.setPageSum(0);
-        this.adapter.notifyDataSetChanged();
+        this.presenter = new MangaPresenter();
+        List<MangaRaw> mangaRawList = mangaAllResponseMessage.getMangaRawList();
+
+        for (MangaRaw mangaRaw: mangaRawList) {
+            this.presenter.addManga(mangaRaw);
+        }
+
+        this.adapter = new MangaAdapter(this.getContext(), this.presenter);
+        this.mangaView.setAdapter(this.adapter);
+
+        this.setPageSum(this.presenter.getSize());
     }
 }

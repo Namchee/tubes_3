@@ -11,6 +11,6 @@
         <item name="alphabetical">A - Z</item>
         <item name="alphabetical_inverse">Z - A</item>
     </string-array>
-    <string name="details_label">Details</string>
+    <string name="details_label">Synopsis</string>
     <string name="chapters_label">Chapter(s) List</string>
 </resources>
