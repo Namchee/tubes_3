@@ -5,7 +5,10 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.util.EventLog;
 import android.view.LayoutInflater;
@@ -18,16 +21,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.tubes_3.R;
+import com.example.tubes_3.fragments.adapters.ChapterAdapter;
 import com.example.tubes_3.messages.request.MangaDetailRequestMessage;
 import com.example.tubes_3.messages.response.MangaDetailResponseMessage;
+import com.example.tubes_3.model.Chapter;
 import com.example.tubes_3.model.MangaDetail;
 import com.example.tubes_3.model.MangaRaw;
+import com.example.tubes_3.presenters.ChapterPresenter;
 import com.example.tubes_3.util.ServiceWorker;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.text.SimpleDateFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,9 +54,14 @@ public class MangaDetailFragment extends Fragment {
     @BindView(R.id.detail_manga_author) TextView tvAuthor;
     @BindView(R.id.detail_manga_artist) TextView tvArtist;
     @BindView(R.id.detail_manga_status) TextView tvStatus;
+    @BindView(R.id.detail_manga_last) TextView tvLast;
+    @BindView(R.id.detail_manga_categories) ChipGroup cgCategory;
     @BindView(R.id.detail_manga_synopsis) TextView tvSynopsis;
-    @BindView(R.id.detail_manga_chapters) ListView lvChapters;
+    @BindView(R.id.detail_manga_chapters) RecyclerView lvChapters;
     @BindView(R.id.detail_progress_loader) ProgressBar loader;
+
+    ChapterPresenter presenter;
+    ChapterAdapter adapter;
 
     Unbinder unbinder;
 
@@ -116,6 +131,30 @@ public class MangaDetailFragment extends Fragment {
         this.tvAuthor.setText(mangaDetail.getAuthor());
         this.tvArtist.setText(mangaDetail.getArtist());
         this.tvStatus.setText(mangaDetail.getStatus());
-        this.tvSynopsis.setText(mangaDetail.getDesc());
+        this.tvSynopsis.setText(Html.fromHtml(mangaDetail.getDesc()));
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+
+        this.tvLast.setText(dateFormat.format(mangaDetail.getLastUpdated()));
+
+        for (String category: mangaDetail.getCategories()) {
+            View view = LayoutInflater.from(this.getContext()).inflate(R.layout.chip_layout, this.cgCategory, false);
+            Chip chip = view.findViewById(R.id.detail_manga_category);
+
+            chip.setText(category);
+
+            this.cgCategory.addView(chip);
+        }
+
+        LinearLayoutManager llm = new LinearLayoutManager(this.getContext());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        this.lvChapters.setLayoutManager(llm);
+
+        this.presenter = new ChapterPresenter(mangaDetail.getChapters());
+        this.adapter = new ChapterAdapter(this.getContext(), this.presenter);
+
+        this.lvChapters.setAdapter(this.adapter);
+
+        this.adapter.notifyDataSetChanged();
     }
 }

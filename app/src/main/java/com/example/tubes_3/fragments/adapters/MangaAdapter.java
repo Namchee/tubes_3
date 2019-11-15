@@ -51,8 +51,4 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaViewHolder> {
     public int getItemViewType(int position) {
         return position;
     }
-
-    public void clearData() {
-        this.presenter.clearPresenter();
-    }
 }

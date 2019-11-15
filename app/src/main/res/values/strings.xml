@@ -13,4 +13,5 @@
     </string-array>
     <string name="details_label">Synopsis</string>
     <string name="chapters_label">Chapter(s) List</string>
+    <string name="add_favorites_label">Add to Favorites</string>
 </resources>
