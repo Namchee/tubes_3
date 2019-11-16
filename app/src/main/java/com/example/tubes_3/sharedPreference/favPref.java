@@ -15,7 +15,13 @@ public class favPref {
 
     public void saveFav(String id){
         SharedPreferences.Editor editor = this.sharedPref.edit();
-        editor.putString(KEY_FAV,id);
+        String res = sharedPref.getString(KEY_FAV,"");
+        if(res.isEmpty()){
+            res=res+id;
+        }else{
+            res=res+","+id;
+        }
+        editor.putString(KEY_FAV,res);
         editor.commit();
     }
 
@@ -23,5 +29,13 @@ public class favPref {
         String currFav = sharedPref.getString(KEY_FAV,"");
         String[]idFav = currFav.split(",");
         return idFav;
+    }
+
+    public boolean cekIsFav(String id){
+        if(sharedPref.getString(KEY_FAV,"").contains(id)){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
