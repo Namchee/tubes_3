@@ -3,6 +3,8 @@ package com.example.tubes_3.presenters;
 import com.example.tubes_3.model.MangaRaw;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MangaPresenter {
@@ -10,6 +12,10 @@ public class MangaPresenter {
 
     public MangaPresenter() {
         this.mangaRawList = new ArrayList<>();
+    }
+
+    public MangaPresenter(List<MangaRaw> mangaRawList) {
+        this.mangaRawList = mangaRawList;
     }
 
     public void addManga(MangaRaw mangaRaw) {
@@ -30,5 +36,9 @@ public class MangaPresenter {
 
     public void clearPresenter() {
         this.mangaRawList.clear();
+    }
+
+    public void sort(Comparator<MangaRaw> comparator) {
+        Collections.sort(this.mangaRawList, comparator);
     }
 }

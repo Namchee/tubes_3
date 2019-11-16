@@ -1,8 +1,8 @@
 package com.example.tubes_3.fragments.home;
 
+import android.app.Activity;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -20,24 +22,27 @@ import android.widget.Toolbar;
 
 import com.example.tubes_3.R;
 import com.example.tubes_3.fragments.adapters.MangaAdapter;
+import com.example.tubes_3.interfaces.SearchableFragment;
 import com.example.tubes_3.messages.RequestMessage;
 import com.example.tubes_3.messages.response.MangaAllResponseMessage;
-import com.example.tubes_3.model.MangaRaw;
 import com.example.tubes_3.presenters.MangaPresenter;
+import com.example.tubes_3.util.comparators.HitsSorter;
+import com.example.tubes_3.util.comparators.LastUpdatedSorter;
+import com.example.tubes_3.util.comparators.LexicographicSorter;
+import com.example.tubes_3.util.comparators.ReverseLexicographicSorter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DisplayFragment extends Fragment {
+public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedListener, SearchView.OnQueryTextListener, SearchableFragment {
     @BindView(R.id.manga_list) RecyclerView mangaView;
     @BindView(R.id.search_bar) SearchView searchInput;
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -57,8 +62,6 @@ public class DisplayFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        this.setRetainInstance(true);
-
         View view = inflater.inflate(R.layout.fragment_display, container, false);
 
         this.unbinder = ButterKnife.bind(this, view);
@@ -69,7 +72,7 @@ public class DisplayFragment extends Fragment {
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this.getContext(), R.array.sort_criteria, android.R.layout.simple_spinner_dropdown_item);
         this.sortCategory.setAdapter(arrayAdapter);
 
-        // this.sortCategory.setOnItemSelectedListener(this);
+        this.searchInput.setEnabled(false);
 
         return view;
     }
@@ -102,25 +105,34 @@ public class DisplayFragment extends Fragment {
         this.getActivity().setActionBar(this.toolbar);
     }
 
-    /*
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         switch (i) {
+            case 0:
+                this.presenter.sort(new HitsSorter());
+                break;
             case 1:
-                this.adapter.fil
+                this.presenter.sort(new LastUpdatedSorter()); //TODO: fix this damn thing!
+                break;
+            case 2:
+                this.presenter.sort(new LexicographicSorter());
+                break;
+            case 3:
+                this.presenter.sort(new ReverseLexicographicSorter());
+                break;
         }
-    }
-     */
 
-    /*
+        this.adapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        this.sortCategory.setSelection(1);
-    }
-     */
 
-    public void setPageSum(int size) {
-        this.pageSum.setText(size + " manga(s)");
+    }
+
+    @Override
+    public void setPageSize(int pageSize) {
+        this.pageSum.setText(Integer.toString(pageSize) + " manga(s)");
     }
 
     @Subscribe
@@ -129,16 +141,41 @@ public class DisplayFragment extends Fragment {
 
         this.getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
-        this.presenter = new MangaPresenter();
-        List<MangaRaw> mangaRawList = mangaAllResponseMessage.getMangaRawList();
+        this.presenter = new MangaPresenter(mangaAllResponseMessage.getMangaRawList());
 
-        for (MangaRaw mangaRaw: mangaRawList) {
-            this.presenter.addManga(mangaRaw);
-        }
+        this.presenter.sort(new HitsSorter());
 
         this.adapter = new MangaAdapter(this.getContext(), this.presenter);
-        this.mangaView.setAdapter(this.adapter);
+        this.adapter.setSearchableFragment(this);
 
-        this.setPageSum(this.presenter.getSize());
+        ScaleInAnimationAdapter animationAdapter = new ScaleInAnimationAdapter(this.adapter);
+
+        this.mangaView.setAdapter(animationAdapter);
+
+        this.setPageSize(this.presenter.getSize());
+
+        this.searchInput.setEnabled(true);
+        this.searchInput.setOnQueryTextListener(this);
+
+        this.sortCategory.setOnItemSelectedListener(this);
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        this.adapter.getFilter().filter(newText);
+
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        this.adapter.getFilter().filter(query);
+
+        this.searchInput.clearFocus();
+
+        InputMethodManager imm = (InputMethodManager)this.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);
+
+        return true;
     }
 }
