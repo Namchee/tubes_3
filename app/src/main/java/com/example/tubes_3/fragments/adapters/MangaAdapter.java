@@ -8,18 +8,20 @@ import android.widget.Filter;
 import android.widget.Filterable;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tubes_3.R;
-import com.example.tubes_3.fragments.home.DisplayFragment;
 import com.example.tubes_3.interfaces.SearchableFragment;
 import com.example.tubes_3.model.MangaRaw;
 import com.example.tubes_3.presenters.MangaPresenter;
+import com.example.tubes_3.util.MangaRawDiffUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MangaAdapter extends RecyclerView.Adapter<MangaViewHolder> implements Filterable {
+    private MangaAdapter instance;
     private MangaPresenter presenter;
     private LayoutInflater inflater;
 
@@ -59,8 +61,12 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaViewHolder> implemen
 
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            filteredData = (List<MangaRaw>)filterResults.values;
-            notifyDataSetChanged();
+            List<MangaRaw> newFilteredData = (List<MangaRaw>)filterResults.values;
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new MangaRawDiffUtils(filteredData, newFilteredData));
+
+            filteredData = newFilteredData;
+
+            diffResult.dispatchUpdatesTo(instance);
 
             if (searchableFragment != null) {
                 searchableFragment.setPageSize(filterResults.count);
@@ -69,6 +75,7 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaViewHolder> implemen
     }
 
     public MangaAdapter(Context ctx, MangaPresenter presenter) {
+        this.instance = this;
         this.inflater = LayoutInflater.from(ctx);
         this.presenter = presenter;
         this.searchableFragment = null;

@@ -24,7 +24,7 @@ public class Parser {
             case 2:
                 return "Completed";
             default:
-                return "SELAMAT MEMBACA API";
+                return "Suspended";
         }
     }
 }

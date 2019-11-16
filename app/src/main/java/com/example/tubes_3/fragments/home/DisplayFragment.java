@@ -1,10 +1,12 @@
 package com.example.tubes_3.fragments.home;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,7 +27,9 @@ import com.example.tubes_3.fragments.adapters.MangaAdapter;
 import com.example.tubes_3.interfaces.SearchableFragment;
 import com.example.tubes_3.messages.RequestMessage;
 import com.example.tubes_3.messages.response.MangaAllResponseMessage;
+import com.example.tubes_3.model.MangaRaw;
 import com.example.tubes_3.presenters.MangaPresenter;
+import com.example.tubes_3.util.MangaRawDiffUtils;
 import com.example.tubes_3.util.comparators.HitsSorter;
 import com.example.tubes_3.util.comparators.LastUpdatedSorter;
 import com.example.tubes_3.util.comparators.LexicographicSorter;
@@ -34,10 +38,15 @@ import com.example.tubes_3.util.comparators.ReverseLexicographicSorter;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,7 +75,13 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
 
         this.unbinder = ButterKnife.bind(this, view);
 
-        this.mangaView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
+        int spanCount = 2;
+
+        if (this.getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            spanCount = 4;
+        }
+
+        this.mangaView.setLayoutManager(new GridLayoutManager(this.getContext(), spanCount));
         this.setToolbar();
 
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this.getContext(), R.array.sort_criteria, android.R.layout.simple_spinner_dropdown_item);
@@ -107,22 +122,26 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        Comparator<MangaRaw> comparator = null;
         switch (i) {
             case 0:
-                this.presenter.sort(new HitsSorter());
+                comparator = new HitsSorter();
                 break;
             case 1:
-                this.presenter.sort(new LastUpdatedSorter()); //TODO: fix this damn thing!
+                comparator = new LastUpdatedSorter(); //TODO: fix this damn thing!
                 break;
             case 2:
-                this.presenter.sort(new LexicographicSorter());
+                comparator = new LexicographicSorter();
                 break;
             case 3:
-                this.presenter.sort(new ReverseLexicographicSorter());
+                comparator = new ReverseLexicographicSorter();
                 break;
         }
 
-        this.adapter.notifyDataSetChanged();
+        this.presenter.sort(comparator);
+
+        this.adapter = new MangaAdapter(this.getContext(), this.presenter);
+        this.mangaView.swapAdapter(this.adapter, true);
     }
 
     @Override
@@ -132,18 +151,18 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
 
     @Override
     public void setPageSize(int pageSize) {
-        this.pageSum.setText(Integer.toString(pageSize) + " manga(s)");
+        this.pageSum.setText(pageSize + " manga(s)");
     }
 
     @Subscribe
     public void handleMangaAllResponseMessage(MangaAllResponseMessage mangaAllResponseMessage) {
         this.loader.setVisibility(View.GONE);
 
-        this.getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        List<MangaRaw> raws = mangaAllResponseMessage.getMangaRawList();
 
-        this.presenter = new MangaPresenter(mangaAllResponseMessage.getMangaRawList());
+        Collections.sort(raws, new HitsSorter());
 
-        this.presenter.sort(new HitsSorter());
+        this.presenter = new MangaPresenter(raws);
 
         this.adapter = new MangaAdapter(this.getContext(), this.presenter);
         this.adapter.setSearchableFragment(this);
@@ -151,6 +170,9 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
         ScaleInAnimationAdapter animationAdapter = new ScaleInAnimationAdapter(this.adapter);
 
         this.mangaView.setAdapter(animationAdapter);
+
+        LandingAnimator landingAnimator = new LandingAnimator();
+        this.mangaView.setItemAnimator(landingAnimator);
 
         this.setPageSize(this.presenter.getSize());
 
