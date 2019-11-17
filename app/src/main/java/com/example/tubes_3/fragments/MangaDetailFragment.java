@@ -28,7 +28,7 @@ public class MangaDetailFragment extends Fragment {
     @BindView(R.id.detail_manga_artist) TextView tvArtist;
     @BindView(R.id.detail_manga_status) TextView tvStatus;
     @BindView(R.id.detail_manga_synopsis) TextView tvSynopsis;
-    @BindView(R.id.detail_manga_chapters) ListView lvChapters
+    @BindView(R.id.detail_manga_chapters) ListView lvChapters;
 
     public MangaDetailFragment() {
         // Required empty public constructor
