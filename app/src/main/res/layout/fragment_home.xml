@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:id="@+id/home_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,11 +22,4 @@
         app:itemTextColor="@drawable/state_btnv"
         app:menu="@menu/home_bottom_navigation" />
 
-    <ProgressBar
-        android:id="@+id/home_progress_loader"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="match_parent"
-        android:padding="150dp"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true" />
 </RelativeLayout>

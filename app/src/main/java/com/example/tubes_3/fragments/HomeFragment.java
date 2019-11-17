@@ -12,28 +12,16 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.ProgressBar;
 
 import com.example.tubes_3.R;
 import com.example.tubes_3.fragments.home.DisplayFragment;
 import com.example.tubes_3.fragments.home.FavoriteFragment;
 import com.example.tubes_3.fragments.home.HistoryFragment;
 import com.example.tubes_3.interfaces.FragmentListener;
-import com.example.tubes_3.messages.RequestMessage;
-import com.example.tubes_3.messages.response.MangaAllResponseMessage;
-import com.example.tubes_3.model.MangaRaw;
 import com.example.tubes_3.presenters.MangaPresenter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
-import java.util.List;
-
-import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,12 +34,6 @@ public class HomeFragment extends Fragment implements FragmentListener, BottomNa
     DisplayFragment displayFragment;
     FavoriteFragment favoriteFragment;
     HistoryFragment historyFragment;
-
-    MangaPresenter mangaPresenter;
-
-    Unbinder unbinder;
-    
-    @BindView(R.id.home_progress_loader) ProgressBar loader;
 
     public static final int DISPLAY_ID = 1;
     public static final int FAVORITES_ID = 2;
@@ -67,41 +49,20 @@ public class HomeFragment extends Fragment implements FragmentListener, BottomNa
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        this.unbinder = ButterKnife.bind(this, view);
-
         this.homeFm = this.getChildFragmentManager();
 
         this.navigationView = view.findViewById(R.id.home_navigation);
 
+        this.displayFragment = new DisplayFragment();
+        this.favoriteFragment = new FavoriteFragment();
+        this.historyFragment = new HistoryFragment();
+
         this.navigationView.setOnNavigationItemSelectedListener(this);
         this.navigationView.setOnNavigationItemReselectedListener(this);
 
+        this.changePage(DISPLAY_ID);
+
         return view;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-
-        this.loader.setVisibility(View.VISIBLE);
-
-        this.getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
-        EventBus.getDefault().postSticky(new RequestMessage());
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        this.unbinder.unbind();
     }
 
     public void changePage(int id) {
@@ -171,24 +132,5 @@ public class HomeFragment extends Fragment implements FragmentListener, BottomNa
         if (this.historyFragment.isVisible()) {
             ft.hide(this.historyFragment);
         }
-    }
-
-    @Subscribe
-    public void handleMangaAllResponseMessage(MangaAllResponseMessage mangaAllResponseMessage) {
-        this.loader.setVisibility(View.GONE);
-        this.getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
-        this.mangaPresenter = new MangaPresenter();
-        List<MangaRaw> mangaRawList = mangaAllResponseMessage.getMangaRawList();
-
-        for (MangaRaw mangaRaw: mangaRawList) {
-            this.mangaPresenter.addManga(mangaRaw);
-        }
-
-        this.displayFragment = new DisplayFragment(mangaPresenter);
-        this.favoriteFragment = new FavoriteFragment(mangaPresenter);
-        this.historyFragment = new HistoryFragment(mangaPresenter);
-
-        this.changePage(DISPLAY_ID);
     }
 }

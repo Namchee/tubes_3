@@ -4,17 +4,18 @@ import java.util.Date;
 import java.util.List;
 
 public class MangaDetail {
-    private String imgUrl, title, author, artist, desc;
+    private String imgUrl, title, author, artist, desc, status;
     private Date createdAt, lastUpdated;
 
     private List<String> categories;
     private List<Chapter> chapters;
 
-    public MangaDetail(String imgUrl, String title, String author, String artist, String desc, List<String> categories, Date createdAt, Date lastUpdated, List<Chapter> chapterList) {
+    public MangaDetail(String imgUrl, String title, String author, String artist, String desc, String status, List<String> categories, Date createdAt, Date lastUpdated, List<Chapter> chapterList) {
         this.imgUrl = imgUrl;
         this.title = title;
         this.author = author;
         this.desc = desc;
+        this.status = status;
         this.artist = artist;
         this.categories = categories;
         this.createdAt = createdAt;
@@ -56,5 +57,9 @@ public class MangaDetail {
 
     public List<String> getCategories() {
         return categories;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }

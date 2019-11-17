@@ -5,14 +5,14 @@ import com.example.tubes_3.model.MangaDetail;
 import com.example.tubes_3.model.MangaRaw;
 
 public class MangaDetailResponseMessage extends ResponseMessage {
-    public MangaDetail mangaRawDetail;
+    public MangaDetail mangaDetail;
 
     public MangaDetailResponseMessage(MangaDetail mangaRawDetail) {
         super(RESPONSE_DETAIL);
-        this.mangaRawDetail = mangaRawDetail;
+        this.mangaDetail = mangaRawDetail;
     }
 
     public MangaDetail getMangaRawDetail() {
-        return this.mangaRawDetail;
+        return this.mangaDetail;
     }
 }
