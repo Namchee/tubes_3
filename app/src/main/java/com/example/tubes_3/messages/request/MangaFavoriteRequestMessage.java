@@ -8,7 +8,11 @@ public class MangaFavoriteRequestMessage extends RequestMessage {
     private List<String> mangaIds;
 
     public MangaFavoriteRequestMessage(List<String> mangaIds) {
-        this.ty
+        super(REQUEST_FAVORITE);
+        this.mangaIds = mangaIds;
     }
 
+    public List<String> getMangaIds() {
+        return mangaIds;
+    }
 }

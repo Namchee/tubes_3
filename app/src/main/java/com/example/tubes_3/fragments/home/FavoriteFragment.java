@@ -16,14 +16,22 @@ import android.widget.TextView;
 
 import com.example.tubes_3.R;
 import com.example.tubes_3.fragments.adapters.MangaAdapter;
+import com.example.tubes_3.messages.request.MangaFavoriteRequestMessage;
+import com.example.tubes_3.messages.response.MangaListResponseMessage;
+import com.example.tubes_3.model.MangaRaw;
 import com.example.tubes_3.presenters.MangaPresenter;
 import com.example.tubes_3.sharedPreference.FavoritesPreferences;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +39,7 @@ import butterknife.Unbinder;
 public class FavoriteFragment extends Fragment {
     @BindView(R.id.favorites_list) RecyclerView favoritesView;
     @BindView(R.id.favorites_progress_loader) ProgressBar loader;
+    @BindView(R.id.favorites_sum) TextView favoritesNum;
 
     private Unbinder unbinder;
 
@@ -76,8 +85,36 @@ public class FavoriteFragment extends Fragment {
 
         FavoritesPreferences preferences = new FavoritesPreferences(this.getContext());
 
-        preferences.getFavorites()
+        EventBus.getDefault().postSticky(new MangaFavoriteRequestMessage(preferences.getFavorites()));
+    }
 
-        EventBus.getDefault().postSticky(new );
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void handleMangaAllResponseMessage(MangaListResponseMessage mangaListResponseMessage) {
+        this.loader.setVisibility(View.GONE);
+
+        List<MangaRaw> mangaRawList = mangaListResponseMessage.getMangaRawList();
+
+        this.presenter = new MangaPresenter(mangaRawList);
+        this.adapter = new MangaAdapter(this.getContext(), this.presenter);
+
+        ScaleInAnimationAdapter animationAdapter = new ScaleInAnimationAdapter(this.adapter);
+
+        this.favoritesView.setAdapter(animationAdapter);
+
+        LandingAnimator landingAnimator = new LandingAnimator();
+        this.favoritesView.setItemAnimator(landingAnimator);
+
+        this.setFavoritesNum(mangaRawList.size());
+    }
+
+    private void setFavoritesNum(int num) {
+        this.favoritesNum.setText(num + " manga(s)");
     }
 }

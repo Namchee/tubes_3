@@ -6,14 +6,12 @@ import android.os.Bundle;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,10 +24,9 @@ import com.example.tubes_3.R;
 import com.example.tubes_3.fragments.adapters.MangaAdapter;
 import com.example.tubes_3.interfaces.SearchableFragment;
 import com.example.tubes_3.messages.RequestMessage;
-import com.example.tubes_3.messages.response.MangaAllResponseMessage;
+import com.example.tubes_3.messages.response.MangaListResponseMessage;
 import com.example.tubes_3.model.MangaRaw;
 import com.example.tubes_3.presenters.MangaPresenter;
-import com.example.tubes_3.util.MangaRawDiffUtils;
 import com.example.tubes_3.util.comparators.HitsSorter;
 import com.example.tubes_3.util.comparators.LastUpdatedSorter;
 import com.example.tubes_3.util.comparators.LexicographicSorter;
@@ -146,7 +143,7 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-
+        // DO NOTHING
     }
 
     @Override
@@ -155,10 +152,10 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
     }
 
     @Subscribe
-    public void handleMangaAllResponseMessage(MangaAllResponseMessage mangaAllResponseMessage) {
+    public void handleMangaAllResponseMessage(MangaListResponseMessage mangaListResponseMessage) {
         this.loader.setVisibility(View.GONE);
 
-        List<MangaRaw> raws = mangaAllResponseMessage.getMangaRawList();
+        List<MangaRaw> raws = mangaListResponseMessage.getMangaRawList();
 
         Collections.sort(raws, new HitsSorter());
 

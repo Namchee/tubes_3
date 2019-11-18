@@ -5,10 +5,10 @@ import com.example.tubes_3.model.MangaRaw;
 
 import java.util.List;
 
-public class MangaAllResponseMessage extends ResponseMessage {
+public class MangaListResponseMessage extends ResponseMessage {
     List<MangaRaw> mangaRawList;
 
-    public MangaAllResponseMessage(List<MangaRaw> mangaRawList) {
+    public MangaListResponseMessage(List<MangaRaw> mangaRawList) {
         super(RESPONSE_ALL);
         this.mangaRawList = mangaRawList;
     }
