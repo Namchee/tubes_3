@@ -24,6 +24,7 @@ import com.example.tubes_3.sharedPreference.FavoritesPreferences;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -95,7 +96,7 @@ public class FavoriteFragment extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleMangaAllResponseMessage(MangaListResponseMessage mangaListResponseMessage) {
         this.loader.setVisibility(View.GONE);
 

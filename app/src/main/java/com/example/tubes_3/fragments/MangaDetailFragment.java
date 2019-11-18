@@ -28,7 +28,9 @@ import com.example.tubes_3.model.Chapter;
 import com.example.tubes_3.model.MangaDetail;
 import com.example.tubes_3.model.MangaRaw;
 import com.example.tubes_3.presenters.ChapterPresenter;
+import com.example.tubes_3.sharedPreference.FavoritesPreferences;
 import com.example.tubes_3.util.ServiceWorker;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.squareup.picasso.Picasso;
@@ -46,7 +48,7 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MangaDetailFragment extends Fragment {
+public class MangaDetailFragment extends Fragment implements View.OnClickListener {
     MangaRaw mangaRaw;
 
     @BindView(R.id.detail_manga_picture) ImageView mangaPic;
@@ -59,6 +61,9 @@ public class MangaDetailFragment extends Fragment {
     @BindView(R.id.detail_manga_synopsis) TextView tvSynopsis;
     @BindView(R.id.detail_manga_chapters) RecyclerView lvChapters;
     @BindView(R.id.detail_progress_loader) ProgressBar loader;
+    @BindView(R.id.favorite_button) MaterialButton favoriteButton;
+
+    FavoritesPreferences preferences;
 
     ChapterPresenter presenter;
     ChapterAdapter adapter;
@@ -80,6 +85,8 @@ public class MangaDetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_manga_detail, container, false);
 
         this.unbinder = ButterKnife.bind(this, view);
+
+        this.preferences = new FavoritesPreferences(this.getContext());
 
         this.tvSynopsis.setMovementMethod(new ScrollingMovementMethod());
 
@@ -147,7 +154,7 @@ public class MangaDetailFragment extends Fragment {
         }
 
         LinearLayoutManager llm = new LinearLayoutManager(this.getContext());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        llm.setOrientation(RecyclerView.VERTICAL);
         this.lvChapters.setLayoutManager(llm);
 
         this.presenter = new ChapterPresenter(mangaDetail.getChapters());
@@ -155,6 +162,35 @@ public class MangaDetailFragment extends Fragment {
 
         this.lvChapters.setAdapter(this.adapter);
 
-        this.adapter.notifyDataSetChanged();
+        if (this.preferences.isFavorite(this.mangaRaw.getId())) {
+            this.favoriteButton.setIconResource(R.drawable.ic_favorite);
+            this.favoriteButton.setIconTintResource(android.R.color.holo_red_dark);
+        } else {
+            this.favoriteButton.setIconResource(R.drawable.ic_favorite_border);
+            this.favoriteButton.setIconTintResource(android.R.color.black);
+        }
+
+        this.favoriteButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+
+        if (id == this.favoriteButton.getId()) {
+            this.handleFavorite();
+        }
+    }
+
+    private void handleFavorite() {
+        if (this.preferences.isFavorite(this.mangaRaw.getId())) {
+            this.preferences.deleteFavorite(this.mangaRaw.getId());
+            this.favoriteButton.setIconResource(R.drawable.ic_favorite_border);
+            this.favoriteButton.setIconTintResource(android.R.color.black);
+        } else {
+            this.preferences.saveFavorite(this.mangaRaw.getId());
+            this.favoriteButton.setIconResource(R.drawable.ic_favorite);
+            this.favoriteButton.setIconTintResource(android.R.color.holo_red_dark);
+        }
     }
 }
