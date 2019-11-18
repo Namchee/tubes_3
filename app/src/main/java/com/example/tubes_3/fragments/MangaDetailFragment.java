@@ -39,6 +39,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 
 import butterknife.BindView;
@@ -57,6 +58,7 @@ public class MangaDetailFragment extends Fragment implements View.OnClickListene
     @BindView(R.id.detail_manga_artist) TextView tvArtist;
     @BindView(R.id.detail_manga_status) TextView tvStatus;
     @BindView(R.id.detail_manga_last) TextView tvLast;
+    @BindView(R.id.detail_manga_hits) TextView tvHits;
     @BindView(R.id.detail_manga_categories) ChipGroup cgCategory;
     @BindView(R.id.detail_manga_synopsis) TextView tvSynopsis;
     @BindView(R.id.detail_manga_chapters) RecyclerView lvChapters;
@@ -143,6 +145,7 @@ public class MangaDetailFragment extends Fragment implements View.OnClickListene
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
 
         this.tvLast.setText(dateFormat.format(mangaDetail.getLastUpdated()));
+        this.tvHits.setText(new DecimalFormat("#,###.#").format(mangaDetail.getHits()));
 
         for (String category: mangaDetail.getCategories()) {
             View view = LayoutInflater.from(this.getContext()).inflate(R.layout.chip_layout, this.cgCategory, false);

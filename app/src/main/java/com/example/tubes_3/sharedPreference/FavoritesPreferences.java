@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,25 +24,33 @@ public class FavoritesPreferences {
     }
 
     public List<String> getFavorites(){
-        String currFav = sharedPref.getString(KEY_FAV,"");
-        Type type = new TypeToken<List<String>>(){}.getType();
+        String currFav = this.sharedPref.getString(KEY_FAV,"");
 
-        return this.gson.fromJson(currFav, type);
+        return this.gson.fromJson(currFav, List.class);
     }
 
     public void saveFavorite(String id){
         SharedPreferences.Editor editor = this.sharedPref.edit();
         List<String> prevFavorites = this.getFavorites();
 
+        if (prevFavorites == null) {
+            prevFavorites = new ArrayList<>();
+        }
+
         prevFavorites.add(id);
 
         editor.putString(KEY_FAV, this.gson.toJson(prevFavorites));
+
         editor.commit();
     }
 
 
     public boolean isFavorite(String id){
         List<String> favorites = this.getFavorites();
+
+        if (favorites == null) {
+            return false;
+        }
 
         for (String favorite: favorites) {
             if (favorite.equals(id)) {
@@ -65,5 +74,11 @@ public class FavoritesPreferences {
                 break;
             }
         }
+
+        SharedPreferences.Editor editor = this.sharedPref.edit();
+
+        editor.putString(KEY_FAV, this.gson.toJson(favorites));
+
+        editor.commit();
     }
 }
