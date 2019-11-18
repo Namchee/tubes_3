@@ -4,13 +4,14 @@ import java.util.Date;
 import java.util.List;
 
 public class MangaDetail {
-    private String imgUrl, title, author, artist, desc, status;
+    private String imgUrl, title, author, artist, desc, status, url;
+    private int hits;
     private Date createdAt, lastUpdated;
 
     private List<String> categories;
     private List<Chapter> chapters;
 
-    public MangaDetail(String imgUrl, String title, String author, String artist, String desc, String status, List<String> categories, Date createdAt, Date lastUpdated, List<Chapter> chapterList) {
+    public MangaDetail(String imgUrl, String title, String author, String artist, String desc, String status, List<String> categories, Date createdAt, Date lastUpdated, List<Chapter> chapterList, int hits, String url) {
         this.imgUrl = imgUrl;
         this.title = title;
         this.author = author;
@@ -21,6 +22,8 @@ public class MangaDetail {
         this.createdAt = createdAt;
         this.lastUpdated = lastUpdated;
         this.chapters = chapterList;
+        this.hits = hits;
+        this.url = url;
     }
 
     public String getImgUrl() {
@@ -61,5 +64,13 @@ public class MangaDetail {
 
     public String getStatus() {
         return status;
+    }
+
+    public int getHits() {
+        return hits;
+    }
+
+    public String getUrl() {
+        return url;
     }
 }

@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="@dimen/small_padding"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="hello bitches" />
-</RelativeLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:padding="@dimen/small_padding"
+        android:id="@+id/favorites_list"
+        android:gravity="center"
+        android:clipToPadding="true"
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ProgressBar
+        android:id="@+id/display_progress_loader"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:padding="150dp"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true" />
+</LinearLayout>
