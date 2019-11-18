@@ -17,6 +17,7 @@ import com.example.tubes_3.messages.ResponseMessage;
 import com.example.tubes_3.messages.request.ChapterRequestMessage;
 import com.example.tubes_3.messages.request.MangaDetailRequestMessage;
 import com.example.tubes_3.messages.response.MangaDetailResponseMessage;
+import com.example.tubes_3.model.Chapter;
 import com.example.tubes_3.model.MangaDetail;
 import com.example.tubes_3.model.MangaRaw;
 import com.example.tubes_3.util.ServiceWorker;
