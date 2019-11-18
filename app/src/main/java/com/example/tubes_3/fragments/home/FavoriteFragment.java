@@ -76,8 +76,8 @@ public class FavoriteFragment extends Fragment {
 
         FavoritesPreferences preferences = new FavoritesPreferences(this.getContext());
 
-        preferences.getFavorites()
+        //preferences.getFavorites()
 
-        EventBus.getDefault().postSticky(new );
+        //EventBus.getDefault().postSticky(new );
     }
 }

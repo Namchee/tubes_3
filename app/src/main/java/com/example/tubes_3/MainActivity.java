@@ -1,10 +1,13 @@
 package com.example.tubes_3;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -43,13 +46,35 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         this.fragmentManager = this.getSupportFragmentManager();
+
+        this.handleToHomepage();
+    }
+
+    @Override
+    public void onBackPressed(){
         FragmentTransaction ft = this.fragmentManager.beginTransaction();
-
-        this.homeFragment = new HomeFragment();
-
-        ft.add(R.id.fragment_container, homeFragment, "").addToBackStack("home");
-
-        ft.commit();
+        int fragmentStack_count = this.fragmentManager.getBackStackEntryCount();
+        Log.d("onBackPressed: ",fragmentStack_count+"");
+        if(fragmentStack_count<=1){
+            AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+            alertDialog.setTitle("Are you sure to quit?");
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            finish();
+                        }
+                    });
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+        } else {
+            this.handleToHomepage();
+        }
     }
 
     @Override
@@ -87,6 +112,32 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void handleToHomepage(){
+        FragmentTransaction ft = this.fragmentManager.beginTransaction();
+
+        if (this.mangaReadFragment != null && this.mangaReadFragment.isAdded()) {
+            ft.hide(this.mangaReadFragment);
+            ft.remove(this.mangaReadFragment);
+        }
+
+        if(this.mangaDetailFragment != null && this.mangaDetailFragment.isAdded()){
+            ft.hide(this.mangaDetailFragment);
+            ft.remove(this.mangaDetailFragment);
+        }
+
+
+        if (this.homeFragment == null ) {
+            this.homeFragment = new HomeFragment();
+        }
+
+        if(!this.homeFragment.isAdded()) ft.add(R.id.fragment_container,this.homeFragment, null).addToBackStack("home");
+
+        ft.show(this.homeFragment);
+
+        ft.commit();
+    }
+
+
     public void handleToMangaDetail(MangaRaw mangaRaw) {
         FragmentTransaction ft = this.fragmentManager.beginTransaction();
 
@@ -110,6 +161,22 @@ public class MainActivity extends AppCompatActivity {
 
     public void handleToChapterRead(Chapter ch) {
         //TODO: implement!
+        FragmentTransaction ft = this.fragmentManager.beginTransaction();
 
+        ft.setCustomAnimations(R.anim.fragment_animation_in, R.anim.fragment_animation_out);
+
+        if (this.homeFragment != null && this.homeFragment.isAdded()) {
+            ft.hide(this.homeFragment);
+        }
+
+        if (this.mangaDetailFragment != null && this.mangaDetailFragment.isAdded()) {
+            ft.hide(this.mangaDetailFragment);
+        }
+
+        this.mangaReadFragment = new MangaReadFragment(ch);
+
+        ft.add(R.id.fragment_container, this.mangaReadFragment, null).addToBackStack("read");
+
+        ft.commit();
     }
 }

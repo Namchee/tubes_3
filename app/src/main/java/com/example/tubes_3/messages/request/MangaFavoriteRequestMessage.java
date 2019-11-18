@@ -8,7 +8,7 @@ public class MangaFavoriteRequestMessage extends RequestMessage {
     private List<String> mangaIds;
 
     public MangaFavoriteRequestMessage(List<String> mangaIds) {
-        this.ty
+
     }
 
 }
