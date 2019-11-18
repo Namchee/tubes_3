@@ -17,6 +17,7 @@ import com.example.tubes_3.messages.ResponseMessage;
 import com.example.tubes_3.messages.request.ChapterRequestMessage;
 import com.example.tubes_3.messages.request.MangaDetailRequestMessage;
 import com.example.tubes_3.messages.response.MangaDetailResponseMessage;
+import com.example.tubes_3.model.Chapter;
 import com.example.tubes_3.model.MangaDetail;
 import com.example.tubes_3.model.MangaRaw;
 import com.example.tubes_3.util.ServiceWorker;
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             case RequestMessage.REQUEST_CHAPTER: {
                 ChapterRequestMessage chapterRequestMessage = (ChapterRequestMessage)message;
 
-                this.handleToChapterRead();
+                this.handleToChapterRead(chapterRequestMessage.getChapter());
                 break;
             }
         }
@@ -107,7 +108,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void handleToChapterRead() {
+    public void handleToChapterRead(Chapter ch) {
         //TODO: implement!
+
     }
 }
