@@ -97,7 +97,7 @@ public class FavoriteFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void handleMangaAllResponseMessage(MangaListResponseMessage mangaListResponseMessage) {
+    public void handleMangaFavoriteResponseMessage(MangaListResponseMessage mangaListResponseMessage) {
         this.loader.setVisibility(View.GONE);
 
         List<MangaRaw> mangaRawList = mangaListResponseMessage.getMangaRawList();

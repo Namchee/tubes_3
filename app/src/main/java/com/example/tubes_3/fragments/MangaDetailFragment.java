@@ -126,7 +126,7 @@ public class MangaDetailFragment extends Fragment implements View.OnClickListene
 
         this.getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
-        MangaDetail mangaDetail = mangaDetailResponseMessage.getMangaRawDetail();
+        MangaDetail mangaDetail = mangaDetailResponseMessage.getMangaDetail();
 
         if (mangaDetail.getImgUrl() != null && mangaDetail.getImgUrl() != "") {
             Picasso.get().load(Uri.decode(mangaDetail.getImgUrl())).placeholder(R.drawable.ic_progress_animation).into(this.mangaPic);

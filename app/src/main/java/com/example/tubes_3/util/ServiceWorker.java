@@ -21,6 +21,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 public class ServiceWorker {
@@ -162,7 +163,12 @@ public class ServiceWorker {
             Date createdAt = Parser.parseDate(rawObject.getString("created"));
             Date lastUpdated = Parser.parseDate(rawObject.getString("last_chapter_date"));
             int hits = rawObject.getInt("hits");
-            String url = rawObject.getString("url");
+
+            String url = "";
+
+            if (rawObject.has("url")) {
+                url = rawObject.getString("url");
+            }
 
             JSONArray rawChapterArray = rawObject.getJSONArray("chapters");
             List<Chapter> chapterList = this.convertToChapterList(rawChapterArray);
@@ -175,6 +181,7 @@ public class ServiceWorker {
             }
 
             mangaDetail = new MangaDetail(imgUrl, title, author, artist, desc, status, categories, createdAt, lastUpdated, chapterList, hits, url);
+            System.out.println(mangaDetail);
         } catch (JSONException e) {
             e.printStackTrace();
         }

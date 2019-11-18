@@ -7,12 +7,12 @@ import com.example.tubes_3.model.MangaRaw;
 public class MangaDetailResponseMessage extends ResponseMessage {
     private MangaDetail mangaDetail;
 
-    public MangaDetailResponseMessage(MangaDetail mangaRawDetail) {
+    public MangaDetailResponseMessage(MangaDetail mangaDetail) {
         super(RESPONSE_DETAIL);
-        this.mangaDetail = mangaRawDetail;
+        this.mangaDetail = mangaDetail;
     }
 
-    public MangaDetail getMangaRawDetail() {
+    public MangaDetail getMangaDetail() {
         return this.mangaDetail;
     }
 }
