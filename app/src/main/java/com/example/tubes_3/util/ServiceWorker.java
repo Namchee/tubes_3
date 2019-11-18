@@ -167,6 +167,7 @@ public class ServiceWorker {
             String desc = rawObject.getString("description");
             Date createdAt = Parser.parseDate(rawObject.getString("created"));
             Date lastUpdated = Parser.parseDate(rawObject.getString("last_chapter_date"));
+            int hits = rawObject.getInt("hits");
 
             JSONArray rawChapterArray = rawObject.getJSONArray("chapters");
             List<Chapter> chapterList = this.convertToChapterList(rawChapterArray);
@@ -178,7 +179,7 @@ public class ServiceWorker {
                 categories.add(categoriesRaw.getString(i));
             }
 
-            mangaDetail = new MangaDetail(imgUrl, title, author, artist, desc, status, categories, createdAt, lastUpdated, chapterList);
+            mangaDetail = new MangaDetail(imgUrl, title, author, artist, desc, status, categories, createdAt, lastUpdated, chapterList, hits);
         } catch (JSONException e) {
             e.printStackTrace();
         }

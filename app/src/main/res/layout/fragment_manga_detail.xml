@@ -105,6 +105,24 @@
                         android:id="@+id/detail_manga_last" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:padding="@dimen/small_padding"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="Hits"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"/>
+                    <TextView
+                        android:id="@+id/detail_manga_hits"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
                 <com.google.android.material.button.MaterialButton
                     android:layout_margin="@dimen/small_padding"
                     android:clickable="true"
