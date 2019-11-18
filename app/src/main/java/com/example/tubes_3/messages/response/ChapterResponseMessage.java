@@ -9,7 +9,7 @@ public class ChapterResponseMessage extends ResponseMessage {
     private List<String> imageList;
 
     public ChapterResponseMessage(List<String> imageList) {
-        super(RESPONSE_DETAIL);
+        super(RESPONSE_CHAPTER);
         this.imageList = imageList;
     }
 
