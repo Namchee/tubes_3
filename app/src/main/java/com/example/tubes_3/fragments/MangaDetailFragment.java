@@ -10,25 +10,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
-import android.util.EventLog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.tubes_3.R;
 import com.example.tubes_3.fragments.adapters.ChapterAdapter;
-import com.example.tubes_3.messages.request.MangaDetailRequestMessage;
 import com.example.tubes_3.messages.response.MangaDetailResponseMessage;
-import com.example.tubes_3.model.Chapter;
 import com.example.tubes_3.model.MangaDetail;
 import com.example.tubes_3.model.MangaRaw;
 import com.example.tubes_3.presenters.ChapterPresenter;
-import com.example.tubes_3.sharedPreference.FavoritesPreferences;
+import com.example.tubes_3.sharedPreference.MangaStorage;
 import com.example.tubes_3.util.ServiceWorker;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
@@ -65,7 +61,7 @@ public class MangaDetailFragment extends Fragment implements View.OnClickListene
     @BindView(R.id.detail_progress_loader) ProgressBar loader;
     @BindView(R.id.favorite_button) MaterialButton favoriteButton;
 
-    FavoritesPreferences preferences;
+    MangaStorage preferences;
 
     ChapterPresenter presenter;
     ChapterAdapter adapter;
@@ -88,7 +84,7 @@ public class MangaDetailFragment extends Fragment implements View.OnClickListene
 
         this.unbinder = ButterKnife.bind(this, view);
 
-        this.preferences = new FavoritesPreferences(this.getContext());
+        this.preferences = new MangaStorage(this.getContext());
 
         this.tvSynopsis.setMovementMethod(new ScrollingMovementMethod());
 

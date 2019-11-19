@@ -124,6 +124,7 @@
                 </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:soundEffectsEnabled="true"
                     android:layout_margin="@dimen/small_padding"
                     android:clickable="true"

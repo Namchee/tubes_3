@@ -20,7 +20,7 @@ import com.example.tubes_3.messages.request.MangaFavoriteRequestMessage;
 import com.example.tubes_3.messages.response.MangaListResponseMessage;
 import com.example.tubes_3.model.MangaRaw;
 import com.example.tubes_3.presenters.MangaPresenter;
-import com.example.tubes_3.sharedPreference.FavoritesPreferences;
+import com.example.tubes_3.sharedPreference.MangaStorage;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -84,7 +84,7 @@ public class FavoriteFragment extends Fragment {
 
         this.loader.setVisibility(View.VISIBLE);
 
-        FavoritesPreferences preferences = new FavoritesPreferences(this.getContext());
+        MangaStorage preferences = new MangaStorage(this.getContext());
 
         EventBus.getDefault().postSticky(new MangaFavoriteRequestMessage(preferences.getFavorites()));
     }
