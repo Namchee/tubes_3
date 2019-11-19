@@ -123,20 +123,28 @@
                         android:layout_weight="1" />
                 </LinearLayout>
 
-                <com.google.android.material.button.MaterialButton
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:soundEffectsEnabled="true"
-                    android:layout_margin="@dimen/small_padding"
-                    android:clickable="true"
-                    app:iconSize="16sp"
-                    app:iconTint="@android:color/background_dark"
-                    app:icon="@drawable/ic_favorite"
-                    android:backgroundTint="@android:color/transparent"
-                    android:text="@string/add_favorites_label"
+                <LinearLayout
+                    android:padding="@dimen/small_padding"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:id="@+id/favorite_button" />
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.button.MaterialButton
+                        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                        android:soundEffectsEnabled="true"
+                        android:layout_margin="@dimen/small_padding"
+                        android:clickable="true"
+                        app:iconSize="16sp"
+                        app:iconTint="@android:color/background_dark"
+                        app:icon="@drawable/ic_favorite"
+                        android:backgroundTint="@android:color/transparent"
+                        android:text="@string/add_favorites_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:id="@+id/favorite_button" />
+                </LinearLayout>
+
             </LinearLayout>
             <LinearLayout
                 android:padding="@dimen/small_padding"

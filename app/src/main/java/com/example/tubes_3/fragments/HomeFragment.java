@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import com.example.tubes_3.R;
 import com.example.tubes_3.fragments.home.DisplayFragment;
 import com.example.tubes_3.fragments.home.FavoriteFragment;
+import com.example.tubes_3.fragments.home.HistoryFragment;
 import com.example.tubes_3.interfaces.FragmentListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -29,9 +30,11 @@ public class HomeFragment extends Fragment implements FragmentListener, BottomNa
 
     DisplayFragment displayFragment;
     FavoriteFragment favoriteFragment;
+    HistoryFragment historyFragment;
 
     public static final int DISPLAY_ID = 1;
     public static final int FAVORITES_ID = 2;
+    public static final int HISTORY_ID = 3;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -49,6 +52,7 @@ public class HomeFragment extends Fragment implements FragmentListener, BottomNa
 
         this.displayFragment = new DisplayFragment();
         this.favoriteFragment = new FavoriteFragment();
+        this.historyFragment = new HistoryFragment();
 
         this.navigationView.setOnNavigationItemSelectedListener(this);
         this.navigationView.setOnNavigationItemReselectedListener(this);
@@ -77,6 +81,12 @@ public class HomeFragment extends Fragment implements FragmentListener, BottomNa
             } else {
                 ft.show(this.favoriteFragment);
             }
+        } else if (id == HISTORY_ID) {
+            if (!this.historyFragment.isAdded()) {
+                ft.add(R.id.home_fragment_container, this.historyFragment, "history");
+            } else {
+                ft.show(this.historyFragment);
+            }
         }
         
         ft.commit();
@@ -90,6 +100,9 @@ public class HomeFragment extends Fragment implements FragmentListener, BottomNa
                 break;
             case R.id.display_menu:
                 this.changePage(DISPLAY_ID);
+                break;
+            case R.id.history_menu:
+                this.changePage(HISTORY_ID);
                 break;
             default:
                 System.exit(1);
@@ -111,6 +124,10 @@ public class HomeFragment extends Fragment implements FragmentListener, BottomNa
 
         if (this.displayFragment.isVisible()) {
             ft.hide(this.displayFragment);
+        }
+
+        if (this.historyFragment.isVisible()) {
+            ft.hide(this.historyFragment);
         }
     }
 }

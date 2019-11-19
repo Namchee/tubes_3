@@ -6,7 +6,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:padding="@dimen/small_padding"
-        android:id="@+id/favorites_list"
+        android:id="@+id/history_list"
         android:gravity="center"
         android:clipToPadding="true"
         android:fitsSystemWindows="true"

@@ -3,16 +3,12 @@ package com.example.tubes_3.sharedPreference;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.tubes_3.model.History;
+import com.example.tubes_3.model.HistoryRaw;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 public class MangaStorage {
     private Gson gson;
@@ -85,23 +81,23 @@ public class MangaStorage {
         editor.commit();
     }
 
-    public List<History> getHistories() {
+    public List<HistoryRaw> getHistories() {
         String currHistory = this.sharedPref.getString(KEY_HISTORY, "");
 
         List<String> historyStrings = this.gson.fromJson(currHistory, List.class);
-        List<History> histories = new ArrayList<>();
+        List<HistoryRaw> histories = new ArrayList<>();
 
         if (historyStrings != null) {
             for (String str: historyStrings) {
-                histories.add(this.gson.fromJson(str, History.class));
+                histories.add(this.gson.fromJson(str, HistoryRaw.class));
             }
         }
 
         return histories;
     }
 
-    public void addHistory(History history) {
-        List<History> historyList = this.getHistories();
+    public void addHistory(HistoryRaw history) {
+        List<HistoryRaw> historyList = this.getHistories();
 
         if (historyList.size() >= 10) {
             historyList.remove(0);
@@ -123,12 +119,12 @@ public class MangaStorage {
      * @param id
      */
     public void deleteHistory(String id) {
-        List<History> historyList = this.getHistories();
+        List<HistoryRaw> historyList = this.getHistories();
 
-        Iterator<History> it = historyList.iterator();
+        Iterator<HistoryRaw> it = historyList.iterator();
 
         while (it.hasNext()) {
-            History hist = it.next();
+            HistoryRaw hist = it.next();
 
             if (hist.getIdManga().equalsIgnoreCase(id)) {
                 it.remove();

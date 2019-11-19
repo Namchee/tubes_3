@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tubes_3.R;
 import com.example.tubes_3.fragments.adapters.ChapterAdapter;
@@ -186,10 +187,26 @@ public class MangaDetailFragment extends Fragment implements View.OnClickListene
             this.preferences.deleteFavorite(this.mangaRaw.getId());
             this.favoriteButton.setIconResource(R.drawable.ic_favorite_border);
             this.favoriteButton.setIconTintResource(android.R.color.black);
+
+            this.makeToast(false);
         } else {
             this.preferences.saveFavorite(this.mangaRaw.getId());
             this.favoriteButton.setIconResource(R.drawable.ic_favorite);
             this.favoriteButton.setIconTintResource(android.R.color.holo_red_dark);
+
+            this.makeToast(true);
         }
+    }
+
+    private void makeToast(boolean saved) {
+        String text = "Saved to favorites";
+
+        if (!saved) {
+            text = "Removed from favorites";
+        }
+
+        Toast toast = Toast.makeText(this.getContext(), text, Toast.LENGTH_SHORT);
+
+        toast.show();
     }
 }

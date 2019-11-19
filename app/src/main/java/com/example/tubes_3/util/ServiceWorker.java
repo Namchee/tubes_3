@@ -8,6 +8,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.tubes_3.messages.response.ChapterResponseMessage;
+import com.example.tubes_3.messages.response.MangaFavoriteResponseMessage;
 import com.example.tubes_3.messages.response.MangaListResponseMessage;
 import com.example.tubes_3.messages.response.MangaDetailResponseMessage;
 import com.example.tubes_3.model.Chapter;
@@ -250,6 +251,11 @@ public class ServiceWorker {
     public void getFavoritesInfo(List<String> mangaIds) {
         List<MangaRaw> mangaRaws = new ArrayList<>();
 
+        if (mangaIds.isEmpty()) {
+            EventBus.getDefault().post(new MangaFavoriteResponseMessage(mangaRaws));
+            return;
+        }
+
         try {
             for (String id: mangaIds) {
                 String location = URL_BASE.MANGA_DETAIL.getUrl() + id;
@@ -259,12 +265,13 @@ public class ServiceWorker {
                         location,
                         null,
                         (JSONObject response) -> {
+                            System.out.println("respond!");
                             MangaRaw mangaRaw = this.convertDetailToRaw(id, response);
 
                             mangaRaws.add(mangaRaw);
 
                             if (mangaRaws.size() == mangaIds.size()) {
-                                EventBus.getDefault().post(new MangaListResponseMessage(mangaRaws));
+                                EventBus.getDefault().post(new MangaFavoriteResponseMessage(mangaRaws));
                             }
                         },
                         (VolleyError error) -> {
