@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void handleRequestMessage(RequestMessage message) {
+    public void onEvent(RequestMessage message) {
         switch (message.getMessageType()) {
             case RequestMessage.REQUEST_ALL: {
                 ServiceWorker.getInstance(this.getApplicationContext()).getAllManga();
