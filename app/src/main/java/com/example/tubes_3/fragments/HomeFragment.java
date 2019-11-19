@@ -71,19 +71,19 @@ public class HomeFragment extends Fragment implements FragmentListener, BottomNa
 
         if (id == DISPLAY_ID) {
             if (!this.displayFragment.isAdded()) {
-                ft.add(R.id.home_fragment_container, this.displayFragment, "display");
+                ft.add(R.id.home_fragment_container, this.displayFragment, "display").addToBackStack("display");
             } else {
                 ft.show(this.displayFragment);
             }
         } else if (id == FAVORITES_ID) {
             if (!this.favoriteFragment.isAdded()) {
-                ft.add(R.id.home_fragment_container, this.favoriteFragment, "favorites");
+                ft.add(R.id.home_fragment_container, this.favoriteFragment, "favorites").addToBackStack("favorites");
             } else {
                 ft.show(this.favoriteFragment);
             }
         } else if (id == HISTORY_ID) {
             if (!this.historyFragment.isAdded()) {
-                ft.add(R.id.home_fragment_container, this.historyFragment, "history");
+                ft.add(R.id.home_fragment_container, this.historyFragment, "history").addToBackStack("history");
             } else {
                 ft.show(this.historyFragment);
             }

@@ -9,15 +9,24 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tubes_3.R;
+import com.example.tubes_3.messages.request.ChapterRequestMessage;
+import com.example.tubes_3.model.Chapter;
+import com.example.tubes_3.model.HistoryRaw;
+import com.example.tubes_3.model.MangaRaw;
 import com.example.tubes_3.presenters.ChapterPresenter;
+import com.example.tubes_3.sharedPreference.MangaStorage;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class ChapterAdapter extends RecyclerView.Adapter<ChapterViewHolder> {
     private LayoutInflater inflater;
     private ChapterPresenter presenter;
+    private MangaRaw mangaRaw;
 
-    public ChapterAdapter(Context ctx, ChapterPresenter presenter) {
+    public ChapterAdapter(Context ctx, ChapterPresenter presenter, MangaRaw raw) {
         this.inflater = LayoutInflater.from(ctx);
         this.presenter = presenter;
+        this.mangaRaw = raw;
 
         this.setHasStableIds(true);
     }
@@ -32,7 +41,16 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ChapterViewHolder holder, int position) {
-        holder.setChapter(this.presenter.getChapter(position));
+        Chapter relevantChapter = this.presenter.getChapter(position);
+
+        holder.setChapter(relevantChapter);
+
+        holder.itemView.setOnClickListener((View view) -> {
+            MangaStorage storage = new MangaStorage(view.getContext());
+            storage.addHistory(new HistoryRaw(this.mangaRaw.getId(), relevantChapter.getChapterNum()));
+
+            EventBus.getDefault().postSticky(new ChapterRequestMessage(relevantChapter));
+        });
     }
 
     @Override

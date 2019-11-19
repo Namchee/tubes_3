@@ -8,6 +8,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,13 +49,14 @@ import jp.wasabeef.recyclerview.animators.LandingAnimator;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedListener, SearchView.OnQueryTextListener, SearchableFragment {
+public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedListener, SearchView.OnQueryTextListener, SearchableFragment, SwipeRefreshLayout.OnRefreshListener {
     @BindView(R.id.manga_list) RecyclerView mangaView;
     @BindView(R.id.search_bar) SearchView searchInput;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.page_sum) TextView pageSum;
     @BindView(R.id.display_progress_loader) ProgressBar loader;
     @BindView(R.id.sort_category) Spinner sortCategory;
+    @BindView(R.id.swipe_to_refresh) SwipeRefreshLayout swipper;
 
     Unbinder unbinder;
 
@@ -177,6 +179,10 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
         this.searchInput.setOnQueryTextListener(this);
 
         this.sortCategory.setOnItemSelectedListener(this);
+
+        this.swipper.setOnRefreshListener(this);
+
+        this.adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -196,5 +202,12 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
         imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);
 
         return true;
+    }
+
+    @Override
+    public void onRefresh() {
+        this.loader.setVisibility(View.VISIBLE);
+
+        EventBus.getDefault().postSticky(new RequestMessage());
     }
 }

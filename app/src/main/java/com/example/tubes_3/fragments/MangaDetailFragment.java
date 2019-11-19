@@ -162,7 +162,7 @@ public class MangaDetailFragment extends Fragment implements View.OnClickListene
         this.lvChapters.setLayoutManager(llm);
 
         this.presenter = new ChapterPresenter(mangaDetail.getChapters());
-        this.adapter = new ChapterAdapter(this.getContext(), this.presenter);
+        this.adapter = new ChapterAdapter(this.getContext(), this.presenter, this.mangaRaw);
 
         this.lvChapters.setAdapter(this.adapter);
 
@@ -212,11 +212,5 @@ public class MangaDetailFragment extends Fragment implements View.OnClickListene
         Toast toast = Toast.makeText(this.getContext(), text, Toast.LENGTH_SHORT);
 
         toast.show();
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putString("hai", "sayang");
-        super.onSaveInstanceState(outState);
     }
 }

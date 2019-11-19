@@ -1,19 +1,19 @@
 package com.example.tubes_3.model;
 
 public class HistoryRaw {
-    private String idManga;
-    private int lastChapter;
+    private String mangaId;
+    private double lastChapter;
 
-    public HistoryRaw(String idManga, int lastChapter) {
-        this.idManga = idManga;
+    public HistoryRaw(String mangaId, double lastChapter) {
+        this.mangaId = mangaId;
         this.lastChapter = lastChapter;
     }
 
-    public String getIdManga() {
-        return idManga;
+    public String getMangaId() {
+        return mangaId;
     }
 
-    public int getLastChapter() {
+    public double getLastChapter() {
         return lastChapter;
     }
 }
