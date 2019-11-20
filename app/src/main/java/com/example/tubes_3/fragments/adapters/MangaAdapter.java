@@ -18,6 +18,9 @@ import com.example.tubes_3.presenters.MangaPresenter;
 import com.example.tubes_3.util.MangaRawDiffUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MangaAdapter extends RecyclerView.Adapter<MangaViewHolder> implements Filterable {
@@ -67,6 +70,8 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaViewHolder> implemen
             filteredData = newFilteredData;
 
             diffResult.dispatchUpdatesTo(instance);
+
+            searchableFragment.hideLoadingSpinner();
 
             if (searchableFragment != null) {
                 searchableFragment.setPageSize(filterResults.count);

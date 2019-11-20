@@ -4,6 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -44,15 +45,6 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
     </RelativeLayout>
-    <androidx.recyclerview.widget.RecyclerView
-        android:padding="@dimen/small_padding"
-        android:id="@+id/manga_list"
-        android:gravity="center"
-        android:clipToPadding="true"
-        android:fitsSystemWindows="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <ProgressBar
         android:id="@+id/display_progress_loader"
         style="?android:attr/progressBarStyle"
@@ -60,4 +52,17 @@
         android:padding="150dp"
         android:layout_height="match_parent"
         android:layout_centerInParent="true" />
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_to_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.recyclerview.widget.RecyclerView
+            android:padding="@dimen/small_padding"
+            android:id="@+id/manga_list"
+            android:gravity="center"
+            android:clipToPadding="true"
+            android:fitsSystemWindows="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

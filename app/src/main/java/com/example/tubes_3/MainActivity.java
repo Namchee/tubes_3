@@ -19,7 +19,10 @@ import com.example.tubes_3.messages.RequestMessage;
 import com.example.tubes_3.messages.ResponseMessage;
 import com.example.tubes_3.messages.request.ChapterRequestMessage;
 import com.example.tubes_3.messages.request.MangaDetailRequestMessage;
+import com.example.tubes_3.messages.request.MangaFavoriteRequestMessage;
+import com.example.tubes_3.messages.request.MangaHistoryRequestMessage;
 import com.example.tubes_3.messages.response.MangaDetailResponseMessage;
+import com.example.tubes_3.messages.response.MangaFavoriteResponseMessage;
 import com.example.tubes_3.model.Chapter;
 import com.example.tubes_3.model.MangaDetail;
 import com.example.tubes_3.model.MangaRaw;
@@ -90,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void handleRequestMessage(RequestMessage message) {
+    public void onEvent(RequestMessage message) {
         switch (message.getMessageType()) {
             case RequestMessage.REQUEST_ALL: {
                 ServiceWorker.getInstance(this.getApplicationContext()).getAllManga();
@@ -100,13 +103,24 @@ public class MainActivity extends AppCompatActivity {
                 MangaDetailRequestMessage mangaDetailRequestMessage = (MangaDetailRequestMessage)message;
 
                 this.handleToMangaDetail(mangaDetailRequestMessage.getMangaRaw());
-
                 break;
             }
             case RequestMessage.REQUEST_CHAPTER: {
                 ChapterRequestMessage chapterRequestMessage = (ChapterRequestMessage)message;
 
                 this.handleToChapterRead(chapterRequestMessage.getChapter());
+                break;
+            }
+            case RequestMessage.REQUEST_FAVORITE: {
+                MangaFavoriteRequestMessage mangaFavoriteRequestMessage = (MangaFavoriteRequestMessage)message;
+
+                ServiceWorker.getInstance(this.getApplicationContext()).getFavoritesInfo(mangaFavoriteRequestMessage.getMangaIds());
+                break;
+            }
+            case RequestMessage.REQUEST_HISTORY: {
+                MangaHistoryRequestMessage mangaHistoryRequestMessage = (MangaHistoryRequestMessage)message;
+
+                ServiceWorker.getInstance(this.getApplicationContext()).getHistoriesInfo(mangaHistoryRequestMessage.getHistoryList());
                 break;
             }
         }

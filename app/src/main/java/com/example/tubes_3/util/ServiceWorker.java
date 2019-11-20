@@ -8,9 +8,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.tubes_3.messages.response.ChapterResponseMessage;
+import com.example.tubes_3.messages.response.MangaFavoriteResponseMessage;
+import com.example.tubes_3.messages.response.MangaHistoryResponseMessage;
 import com.example.tubes_3.messages.response.MangaListResponseMessage;
 import com.example.tubes_3.messages.response.MangaDetailResponseMessage;
 import com.example.tubes_3.model.Chapter;
+import com.example.tubes_3.model.HistoryDetail;
+import com.example.tubes_3.model.HistoryRaw;
 import com.example.tubes_3.model.MangaDetail;
 import com.example.tubes_3.model.MangaRaw;
 
@@ -181,7 +185,6 @@ public class ServiceWorker {
             }
 
             mangaDetail = new MangaDetail(imgUrl, title, author, artist, desc, status, categories, createdAt, lastUpdated, chapterList, hits, url);
-            System.out.println(mangaDetail);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -196,7 +199,7 @@ public class ServiceWorker {
             for (int i = 0; i < rawChapterArray.length(); i++) {
                 JSONArray rawChapter = rawChapterArray.getJSONArray(i);
 
-                int chapterNum = rawChapter.getInt(0);
+                double chapterNum = rawChapter.getDouble(0);
                 Date lastUpdated = Parser.parseDate(rawChapter.getString(1));
                 String title = rawChapter.getString(2);
                 String id = rawChapter.getString(3);
@@ -250,6 +253,11 @@ public class ServiceWorker {
     public void getFavoritesInfo(List<String> mangaIds) {
         List<MangaRaw> mangaRaws = new ArrayList<>();
 
+        if (mangaIds.isEmpty()) {
+            EventBus.getDefault().post(new MangaFavoriteResponseMessage(mangaRaws));
+            return;
+        }
+
         try {
             for (String id: mangaIds) {
                 String location = URL_BASE.MANGA_DETAIL.getUrl() + id;
@@ -264,7 +272,64 @@ public class ServiceWorker {
                             mangaRaws.add(mangaRaw);
 
                             if (mangaRaws.size() == mangaIds.size()) {
-                                EventBus.getDefault().post(new MangaListResponseMessage(mangaRaws));
+                                EventBus.getDefault().post(new MangaFavoriteResponseMessage(mangaRaws));
+                            }
+                        },
+                        (VolleyError error) -> {
+
+                        }
+                );
+
+                getRequestQueue().add(request);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getHistoriesInfo(List<HistoryRaw> historyRaws) {
+        List<HistoryDetail> list = new ArrayList<>();
+
+        if (historyRaws.isEmpty()) {
+            EventBus.getDefault().post(new MangaHistoryResponseMessage(list));
+        }
+
+        try {
+            for (HistoryRaw historyRaw: historyRaws) {
+                String mangaId = historyRaw.getMangaId();
+
+                String location = URL_BASE.MANGA_DETAIL.getUrl() + mangaId;
+
+                JsonObjectRequest request = new JsonObjectRequest(
+                        Request.Method.GET,
+                        location,
+                        null,
+                        (JSONObject response) -> {
+                            MangaRaw mangaRaw = this.convertDetailToRaw(mangaId, response);
+
+                            try {
+                                JSONArray chapterArray = response.getJSONArray("chapters");
+
+                                for (int i = 0; i < chapterArray.length(); i++) {
+                                    JSONArray chapterRaw = chapterArray.getJSONArray(i);
+                                    double chapterNum = chapterRaw.getDouble(0);
+
+                                    if (chapterNum == historyRaw.getLastChapter()) {
+                                        Date lastUpdated = Parser.parseDate(chapterRaw.getString(1));
+                                        String title = chapterRaw.getString(2);
+                                        String id = chapterRaw.getString(3);
+
+                                        Chapter chapter = new Chapter(chapterNum, id, title, lastUpdated);
+                                        list.add(new HistoryDetail(mangaRaw, chapter));
+                                        break;
+                                    }
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (list.size() == historyRaws.size()) {
+                                EventBus.getDefault().post(new MangaHistoryResponseMessage(list));
                             }
                         },
                         (VolleyError error) -> {

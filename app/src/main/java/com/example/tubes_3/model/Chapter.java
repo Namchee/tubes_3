@@ -3,12 +3,12 @@ package com.example.tubes_3.model;
 import java.util.Date;
 
 public class Chapter {
-    private int chapterNum;
+    private double chapterNum;
     private String id, title;
 
     private Date lastUpdated;
 
-    public Chapter(int chapterNum, String id, String title, Date lastUpdated) {
+    public Chapter(double chapterNum, String id, String title, Date lastUpdated) {
         this.chapterNum = chapterNum;
         this.id = id;
         this.title = title;
@@ -23,7 +23,7 @@ public class Chapter {
         return id;
     }
 
-    public int getChapterNum() {
+    public double getChapterNum() {
         return chapterNum;
     }
 

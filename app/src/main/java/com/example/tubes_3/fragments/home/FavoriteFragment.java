@@ -17,10 +17,11 @@ import android.widget.TextView;
 import com.example.tubes_3.R;
 import com.example.tubes_3.fragments.adapters.MangaAdapter;
 import com.example.tubes_3.messages.request.MangaFavoriteRequestMessage;
+import com.example.tubes_3.messages.response.MangaFavoriteResponseMessage;
 import com.example.tubes_3.messages.response.MangaListResponseMessage;
 import com.example.tubes_3.model.MangaRaw;
 import com.example.tubes_3.presenters.MangaPresenter;
-import com.example.tubes_3.sharedPreference.FavoritesPreferences;
+import com.example.tubes_3.sharedPreference.MangaStorage;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -41,6 +42,7 @@ public class FavoriteFragment extends Fragment {
     @BindView(R.id.favorites_list) RecyclerView favoritesView;
     @BindView(R.id.favorites_progress_loader) ProgressBar loader;
     @BindView(R.id.favorites_sum) TextView favoritesNum;
+    @BindView(R.id.no_favorites_text) TextView noFavorites;
 
     private Unbinder unbinder;
 
@@ -84,7 +86,7 @@ public class FavoriteFragment extends Fragment {
 
         this.loader.setVisibility(View.VISIBLE);
 
-        FavoritesPreferences preferences = new FavoritesPreferences(this.getContext());
+        MangaStorage preferences = new MangaStorage(this.getContext());
 
         EventBus.getDefault().postSticky(new MangaFavoriteRequestMessage(preferences.getFavorites()));
     }
@@ -97,10 +99,10 @@ public class FavoriteFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void handleMangaFavoriteResponseMessage(MangaListResponseMessage mangaListResponseMessage) {
+    public void handleMangaFavoriteResponseMessage(MangaFavoriteResponseMessage mangaListResponseMessage) {
         this.loader.setVisibility(View.GONE);
 
-        List<MangaRaw> mangaRawList = mangaListResponseMessage.getMangaRawList();
+        List<MangaRaw> mangaRawList = mangaListResponseMessage.getFavoritesList();
 
         this.presenter = new MangaPresenter(mangaRawList);
         this.adapter = new MangaAdapter(this.getContext(), this.presenter);
@@ -111,6 +113,14 @@ public class FavoriteFragment extends Fragment {
 
         LandingAnimator landingAnimator = new LandingAnimator();
         this.favoritesView.setItemAnimator(landingAnimator);
+
+        if (this.presenter.getSize() == 0) {
+            this.noFavorites.setVisibility(View.VISIBLE);
+        } else {
+            this.noFavorites.setVisibility(View.GONE);
+        }
+
+        this.adapter.notifyDataSetChanged();
 
         this.setFavoritesNum(mangaRawList.size());
     }
