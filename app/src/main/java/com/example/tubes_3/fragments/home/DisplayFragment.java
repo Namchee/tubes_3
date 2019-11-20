@@ -193,6 +193,7 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
         this.swipper.setOnRefreshListener(this);
 
         this.adapter.notifyDataSetChanged();
+        this.swipper.setRefreshing(false);
     }
 
     @Override
@@ -224,12 +225,12 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
 
     @Override
     public void onRefresh() {
-        System.out.println("hai");
-        /*
-        this.loader.setVisibility(View.VISIBLE);
+        this.presenter.clearPresenter();
+        this.adapter.notifyDataSetChanged();
+
+        this.setPageSize(0);
 
         EventBus.getDefault().postSticky(new RequestMessage());
-        */
     }
 
     @Override
