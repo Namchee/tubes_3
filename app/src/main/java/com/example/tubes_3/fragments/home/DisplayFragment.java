@@ -124,6 +124,8 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        this.showLoadingSpinner();
+
         Comparator<MangaRaw> comparator = null;
         switch (i) {
             case 0:
@@ -143,7 +145,12 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
         this.presenter.sort(comparator);
 
         this.adapter = new MangaAdapter(this.getContext(), this.presenter);
+        this.adapter.setSearchableFragment(this);
+
+        this.adapter.getFilter().filter(this.searchInput.getQuery());
         this.mangaView.swapAdapter(this.adapter, true);
+
+        this.hideLoadingSpinner();
     }
 
     @Override
