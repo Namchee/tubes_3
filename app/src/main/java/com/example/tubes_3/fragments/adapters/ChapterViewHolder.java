@@ -6,7 +6,11 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tubes_3.R;
+import com.example.tubes_3.messages.request.ChapterRequestMessage;
+import com.example.tubes_3.messages.request.MangaDetailRequestMessage;
 import com.example.tubes_3.model.Chapter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
 
@@ -38,5 +42,9 @@ public class ChapterViewHolder extends RecyclerView.ViewHolder {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
 
         this.tvDate.setText(dateFormat.format(chapter.getLastUpdated()));
+
+        this.itemView.setOnClickListener((View view) -> {
+            EventBus.getDefault().postSticky(new ChapterRequestMessage(chapter));
+        });
     }
 }

@@ -4,7 +4,7 @@ public class RequestMessage {
     public static final int REQUEST_ALL = 0;
     public static final int REQUEST_DETAIL = 1;
     public static final int REQUEST_CHAPTER = 2;
-    public static final int FAVORITE_REQUEST = 4;
+    public static final int REQUEST_FAVORITE = 3;
 
     private final int messageType;
 

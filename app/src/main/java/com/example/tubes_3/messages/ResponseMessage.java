@@ -4,6 +4,7 @@ public class ResponseMessage {
     public static final int RESPONSE_ALL = 0;
     public static final int RESPONSE_DETAIL = 1;
     public static final int RESPONSE_CHAPTER = 2;
+    public static final int RESPONSE_FAVORITE = 3;
 
     private int messageType;
 

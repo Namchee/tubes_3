@@ -100,7 +100,8 @@ public class MangaReadFragment extends Fragment {
         for (int i = 0; i < imgURL.size() ; i++) {
             iv_list.add(new ImageView(this.getActivity()));
             if(imgURL.get(i)!=null && imgURL.get(i)!=""){
-                Picasso.get().load(URL_BASE.IMAGE_SRC+imgURL.get(i)).placeholder(R.drawable.ic_progress_animation).into(iv_list.get(i));
+                System.out.println(imgURL.get(i));
+                Picasso.get().load(imgURL.get(i)).placeholder(R.drawable.ic_progress_animation).into(iv_list.get(i));
             } else {
                 iv_list.get(i).setImageResource(R.drawable.ic_no);
             }

@@ -2,18 +2,13 @@ package com.example.tubes_3.util;
 
 import android.content.Context;
 
-import com.android.volley.Cache;
-import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.tubes_3.messages.response.ChapterResponseMessage;
-import com.example.tubes_3.messages.response.MangaAllResponseMessage;
+import com.example.tubes_3.messages.response.MangaListResponseMessage;
 import com.example.tubes_3.messages.response.MangaDetailResponseMessage;
 import com.example.tubes_3.model.Chapter;
 import com.example.tubes_3.model.MangaDetail;
@@ -24,9 +19,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 public class ServiceWorker {
@@ -74,7 +69,7 @@ public class ServiceWorker {
                                 mangaRawList.add(this.convertToManga(rawObject));
                             }
 
-                            EventBus.getDefault().post(new MangaAllResponseMessage(mangaRawList));
+                            EventBus.getDefault().post(new MangaListResponseMessage(mangaRawList));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -168,7 +163,12 @@ public class ServiceWorker {
             Date createdAt = Parser.parseDate(rawObject.getString("created"));
             Date lastUpdated = Parser.parseDate(rawObject.getString("last_chapter_date"));
             int hits = rawObject.getInt("hits");
-            String url = rawObject.getString("url");
+
+            String url = "";
+
+            if (rawObject.has("url")) {
+                url = rawObject.getString("url");
+            }
 
             JSONArray rawChapterArray = rawObject.getJSONArray("chapters");
             List<Chapter> chapterList = this.convertToChapterList(rawChapterArray);
@@ -181,6 +181,7 @@ public class ServiceWorker {
             }
 
             mangaDetail = new MangaDetail(imgUrl, title, author, artist, desc, status, categories, createdAt, lastUpdated, chapterList, hits, url);
+            System.out.println(mangaDetail);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -244,5 +245,69 @@ public class ServiceWorker {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void getFavoritesInfo(List<String> mangaIds) {
+        List<MangaRaw> mangaRaws = new ArrayList<>();
+
+        try {
+            for (String id: mangaIds) {
+                String location = URL_BASE.MANGA_DETAIL.getUrl() + id;
+
+                JsonObjectRequest request = new JsonObjectRequest(
+                        Request.Method.GET,
+                        location,
+                        null,
+                        (JSONObject response) -> {
+                            MangaRaw mangaRaw = this.convertDetailToRaw(id, response);
+
+                            mangaRaws.add(mangaRaw);
+
+                            if (mangaRaws.size() == mangaIds.size()) {
+                                EventBus.getDefault().post(new MangaListResponseMessage(mangaRaws));
+                            }
+                        },
+                        (VolleyError error) -> {
+
+                        }
+                );
+
+                getRequestQueue().add(request);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private MangaRaw convertDetailToRaw(String id, JSONObject rawObject) {
+        MangaRaw mangaRaw = null;
+
+        try {
+            String imgUrl = "";
+
+            if (rawObject.has("image") && rawObject.getString("image") != "null") {
+                imgUrl = URL_BASE.IMAGE_SRC.getUrl() + rawObject.getString("image");
+            }
+
+            String title = rawObject.getString("title");
+            String status = Parser.parseStatus(rawObject.getInt("status"));
+            Date lastUpdated = Parser.parseDate(rawObject.getString("last_chapter_date"));
+            int hits = rawObject.getInt("hits");
+
+            JSONArray rawChapterArray = rawObject.getJSONArray("chapters");
+
+            JSONArray categoriesRaw = rawObject.getJSONArray("categories");
+            List<String> categories = new ArrayList<>();
+
+            for (int i = 0; i < categoriesRaw.length(); i++) {
+                categories.add(categoriesRaw.getString(i));
+            }
+
+            mangaRaw = new MangaRaw(id, title, imgUrl, lastUpdated, categories, status, hits);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return mangaRaw;
     }
 }

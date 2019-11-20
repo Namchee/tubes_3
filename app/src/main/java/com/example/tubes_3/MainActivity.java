@@ -117,12 +117,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (this.mangaReadFragment != null && this.mangaReadFragment.isAdded()) {
             ft.hide(this.mangaReadFragment);
-            ft.remove(this.mangaReadFragment);
         }
 
         if(this.mangaDetailFragment != null && this.mangaDetailFragment.isAdded()){
             ft.hide(this.mangaDetailFragment);
-            ft.remove(this.mangaDetailFragment);
         }
 
 

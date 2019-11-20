@@ -6,11 +6,19 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:background="@android:color/black"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/manga_content_container">
 
+        <ProgressBar
+            android:id="@+id/detail_progress_loader"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:padding="150dp"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true" />
         <!--image view-->
 
     </LinearLayout>
