@@ -13,6 +13,7 @@
         android:layout_height="wrap_content" />
 
     <TextView
+        android:visibility="gone"
         android:text="@string/no_favorites_label"
         android:textSize="@dimen/big_title_size"
         android:id="@+id/no_favorites_text"

@@ -192,21 +192,33 @@ public class MangaDetailFragment extends Fragment implements View.OnClickListene
             this.favoriteButton.setIconResource(R.drawable.ic_favorite_border);
             this.favoriteButton.setIconTintResource(android.R.color.black);
 
-            this.makeToast(false);
+            this.makeToast(1);
         } else {
-            this.preferences.saveFavorite(this.mangaRaw.getId());
+            if (this.preferences.getFavoritesSize() >= 3) {
+                this.makeToast(2);
+                return;
+            }
+
+            try {
+                this.preferences.saveFavorite(this.mangaRaw.getId());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             this.favoriteButton.setIconResource(R.drawable.ic_favorite);
             this.favoriteButton.setIconTintResource(android.R.color.holo_red_dark);
 
-            this.makeToast(true);
+            this.makeToast(0);
         }
     }
 
-    private void makeToast(boolean saved) {
+    private void makeToast(int saved) {
         String text = "Saved to favorites";
 
-        if (!saved) {
+        if (saved == 1) {
             text = "Removed from favorites";
+        } else if (saved == 2) {
+            text = "You already have 3 favorites";
         }
 
         Toast toast = Toast.makeText(this.getContext(), text, Toast.LENGTH_SHORT);

@@ -87,6 +87,10 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this.getContext(), R.array.sort_criteria, android.R.layout.simple_spinner_dropdown_item);
         this.sortCategory.setAdapter(arrayAdapter);
 
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            this.loader.setPadding(196, 196, 196, 196);
+        }
+
         this.searchInput.setEnabled(false);
 
         return view;
