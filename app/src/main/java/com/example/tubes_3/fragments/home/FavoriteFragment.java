@@ -42,6 +42,7 @@ public class FavoriteFragment extends Fragment {
     @BindView(R.id.favorites_list) RecyclerView favoritesView;
     @BindView(R.id.favorites_progress_loader) ProgressBar loader;
     @BindView(R.id.favorites_sum) TextView favoritesNum;
+    @BindView(R.id.no_favorites_text) TextView noFavorites;
 
     private Unbinder unbinder;
 
@@ -112,6 +113,14 @@ public class FavoriteFragment extends Fragment {
 
         LandingAnimator landingAnimator = new LandingAnimator();
         this.favoritesView.setItemAnimator(landingAnimator);
+
+        if (this.presenter.getSize() == 0) {
+            this.noFavorites.setVisibility(View.VISIBLE);
+        } else {
+            this.noFavorites.setVisibility(View.GONE);
+        }
+
+        this.adapter.notifyDataSetChanged();
 
         this.setFavoritesNum(mangaRawList.size());
     }

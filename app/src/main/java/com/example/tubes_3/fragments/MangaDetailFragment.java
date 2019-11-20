@@ -4,7 +4,6 @@ package com.example.tubes_3.fragments;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -175,6 +174,7 @@ public class MangaDetailFragment extends Fragment implements View.OnClickListene
         }
 
         this.favoriteButton.setOnClickListener(this);
+        this.adapter.notifyDataSetChanged();
     }
 
     @Override

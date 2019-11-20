@@ -68,6 +68,8 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaViewHolder> implemen
 
             diffResult.dispatchUpdatesTo(instance);
 
+            searchableFragment.hideLoadingSpinner();
+
             if (searchableFragment != null) {
                 searchableFragment.setPageSize(filterResults.count);
             }

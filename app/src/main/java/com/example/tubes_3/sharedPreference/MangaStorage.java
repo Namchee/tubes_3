@@ -126,7 +126,7 @@ public class MangaStorage {
         while (it.hasNext()) {
             HistoryRaw hist = it.next();
 
-            if (hist.getIdManga().equalsIgnoreCase(id)) {
+            if (hist.getMangaId().equalsIgnoreCase(id)) {
                 it.remove();
                 break;
             }

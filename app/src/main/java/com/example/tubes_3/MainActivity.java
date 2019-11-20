@@ -17,6 +17,7 @@ import com.example.tubes_3.messages.ResponseMessage;
 import com.example.tubes_3.messages.request.ChapterRequestMessage;
 import com.example.tubes_3.messages.request.MangaDetailRequestMessage;
 import com.example.tubes_3.messages.request.MangaFavoriteRequestMessage;
+import com.example.tubes_3.messages.request.MangaHistoryRequestMessage;
 import com.example.tubes_3.messages.response.MangaDetailResponseMessage;
 import com.example.tubes_3.messages.response.MangaFavoriteResponseMessage;
 import com.example.tubes_3.model.Chapter;
@@ -86,9 +87,15 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
             case RequestMessage.REQUEST_FAVORITE: {
-                MangaFavoriteRequestMessage mangaFavoriteResponseMessage = (MangaFavoriteRequestMessage)message;
+                MangaFavoriteRequestMessage mangaFavoriteRequestMessage = (MangaFavoriteRequestMessage)message;
 
-                ServiceWorker.getInstance(this.getApplicationContext()).getFavoritesInfo(mangaFavoriteResponseMessage.getMangaIds());
+                ServiceWorker.getInstance(this.getApplicationContext()).getFavoritesInfo(mangaFavoriteRequestMessage.getMangaIds());
+                break;
+            }
+            case RequestMessage.REQUEST_HISTORY: {
+                MangaHistoryRequestMessage mangaHistoryRequestMessage = (MangaHistoryRequestMessage)message;
+
+                ServiceWorker.getInstance(this.getApplicationContext()).getHistoriesInfo(mangaHistoryRequestMessage.getHistoryList());
                 break;
             }
         }

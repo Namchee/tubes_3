@@ -45,6 +45,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
+import jp.wasabeef.recyclerview.animators.ScaleInAnimator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -104,7 +105,9 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
 
         EventBus.getDefault().register(this);
 
-        this.loader.setVisibility(View.VISIBLE);
+        this.showLoadingSpinner();
+
+        this.setPageSize(0);
 
         EventBus.getDefault().postSticky(new RequestMessage());
     }
@@ -155,7 +158,7 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
 
     @Subscribe
     public void handleMangaAllResponseMessage(MangaListResponseMessage mangaListResponseMessage) {
-        this.loader.setVisibility(View.GONE);
+        this.hideLoadingSpinner();
 
         List<MangaRaw> raws = mangaListResponseMessage.getMangaRawList();
 
@@ -170,8 +173,8 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
 
         this.mangaView.setAdapter(animationAdapter);
 
-        LandingAnimator landingAnimator = new LandingAnimator();
-        this.mangaView.setItemAnimator(landingAnimator);
+        ScaleInAnimator scaleInAnimator = new ScaleInAnimator();
+        this.mangaView.setItemAnimator(scaleInAnimator);
 
         this.setPageSize(this.presenter.getSize());
 
@@ -187,6 +190,10 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
 
     @Override
     public boolean onQueryTextChange(String newText) {
+        this.showLoadingSpinner();
+
+        this.mangaView.smoothScrollToPosition(0);
+
         this.adapter.getFilter().filter(newText);
 
         return true;
@@ -194,6 +201,10 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        this.showLoadingSpinner();
+
+        this.mangaView.smoothScrollToPosition(0);
+
         this.adapter.getFilter().filter(query);
 
         this.searchInput.clearFocus();
@@ -206,8 +217,21 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
 
     @Override
     public void onRefresh() {
+        System.out.println("hai");
+        /*
         this.loader.setVisibility(View.VISIBLE);
 
         EventBus.getDefault().postSticky(new RequestMessage());
+        */
+    }
+
+    @Override
+    public void showLoadingSpinner() {
+        this.loader.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoadingSpinner() {
+        this.loader.setVisibility(View.GONE);
     }
 }
