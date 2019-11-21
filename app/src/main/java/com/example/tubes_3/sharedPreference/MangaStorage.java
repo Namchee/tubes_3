@@ -113,17 +113,9 @@ public class MangaStorage {
 
         historyList.add(history);
 
-        List<String> historyStringList = new ArrayList<>();
-
-        for (HistoryRaw raws: historyList) {
-            historyStringList.add(this.gson.toJson(raws));
-        }
-
-        String newHistoryString = this.gson.toJson(historyStringList);
-
         SharedPreferences.Editor editor = this.sharedPref.edit();
 
-        editor.putString(KEY_HISTORY, newHistoryString);
+        editor.putString(KEY_HISTORY, this.toHistoryListString(historyList));
 
         editor.commit();
     }
@@ -146,14 +138,20 @@ public class MangaStorage {
             }
         }
 
-        String newHistoryString = this.gson.toJson(historyList);
-
         SharedPreferences.Editor editor = this.sharedPref.edit();
 
-        editor.putString(KEY_HISTORY, newHistoryString);
+        editor.putString(KEY_HISTORY, this.toHistoryListString(historyList));
 
         editor.commit();
+    }
 
-        System.out.println(this.getHistories().size());
+    private String toHistoryListString(List<HistoryRaw> historyRaws) {
+        List<String> historyStringList = new ArrayList<>();
+
+        for (HistoryRaw raws: historyRaws) {
+            historyStringList.add(this.gson.toJson(raws));
+        }
+
+        return this.gson.toJson(historyStringList);
     }
 }

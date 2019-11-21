@@ -1,31 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:weightSum="6"
-    android:padding="@dimen/small_padding">
-    <ImageView
-        android:layout_weight="2"
-        android:id="@+id/history_manga_image"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:foreground="?android:attr/selectableItemBackground"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/card_border_radius"
+    app:cardElevation="@dimen/card_elevation"
+    app:cardUseCompatPadding="true"
+    android:clickable="true"
+    android:layout_width="match_parent"
+    android:layout_height="100dp">
     <LinearLayout
-        android:orientation="vertical"
         android:padding="@dimen/small_padding"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="4">
-        <TextView
-            android:textSize="@dimen/title_size"
-            android:id="@+id/history_manga_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-        <TextView
-            android:id="@+id/history_manga_chapter"
-            android:textSize="@dimen/subtitle_size"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="7">
+        <ImageView
+            android:layout_weight="2"
+            android:id="@+id/history_manga_image"
+            android:scaleType="fitCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:padding="@dimen/small_padding"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="5">
+            <TextView
+                android:textSize="@dimen/title_size"
+                android:id="@+id/history_manga_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+            <TextView
+                android:id="@+id/history_manga_chapter"
+                android:textSize="@dimen/subtitle_size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</androidx.cardview.widget.CardView>

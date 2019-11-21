@@ -35,4 +35,8 @@ public class HistoryPresenter {
     public void deleteItem(int idx) {
         this.historyDetails.remove(idx);
     }
+
+    public void clear() {
+        this.historyDetails.clear();
+    }
 }

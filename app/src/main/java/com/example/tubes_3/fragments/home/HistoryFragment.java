@@ -23,6 +23,7 @@ import com.example.tubes_3.model.HistoryDetail;
 import com.example.tubes_3.model.HistoryRaw;
 import com.example.tubes_3.presenters.HistoryPresenter;
 import com.example.tubes_3.sharedPreference.MangaStorage;
+import com.google.android.material.button.MaterialButton;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -37,10 +38,11 @@ import jp.wasabeef.recyclerview.animators.LandingAnimator;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HistoryFragment extends Fragment {
+public class HistoryFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.history_list) RecyclerView historyView;
     @BindView(R.id.history_progress_loader) ProgressBar loader;
     @BindView(R.id.no_history_text) TextView tvNo;
+    @BindView(R.id.clear_history_button) MaterialButton clearHistory;
 
     Unbinder unbinder;
 
@@ -109,7 +111,9 @@ public class HistoryFragment extends Fragment {
         }
 
         this.presenter = new HistoryPresenter(historyDetails);
-        this.adapter = new HistoryAdapter(this.getContext(), this.presenter);
+        this.adapter = new HistoryAdapter(this, this.presenter);
+
+        LandingAnimator animator = new LandingAnimator();
 
         ItemTouchHelper helper = new ItemTouchHelper(new SwipeToDeleteCallback(this.adapter));
         helper.attachToRecyclerView(this.historyView);
@@ -119,6 +123,28 @@ public class HistoryFragment extends Fragment {
         this.historyView.setLayoutManager(llm);
         this.historyView.setAdapter(this.adapter);
 
+        this.historyView.setItemAnimator(animator);
+
+        this.clearHistory.setOnClickListener(this);
+
         this.adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+
+        if (id == this.clearHistory.getId()) {
+            int size = this.presenter.getSize();
+            this.presenter.clear();
+
+            this.adapter.notifyItemRangeRemoved(0, size);
+
+            this.showEmptyText();
+        }
+    }
+
+    public void showEmptyText() {
+        this.tvNo.setVisibility(View.VISIBLE);
     }
 }

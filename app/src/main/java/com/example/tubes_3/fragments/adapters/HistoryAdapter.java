@@ -9,15 +9,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tubes_3.R;
+import com.example.tubes_3.fragments.home.HistoryFragment;
 import com.example.tubes_3.presenters.HistoryPresenter;
 import com.example.tubes_3.sharedPreference.MangaStorage;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
+    private HistoryFragment fragment;
     private LayoutInflater inflater;
     private HistoryPresenter presenter;
 
-    public HistoryAdapter(Context ctx, HistoryPresenter presenter) {
-        this.inflater = LayoutInflater.from(ctx);
+    public HistoryAdapter(HistoryFragment fragment, HistoryPresenter presenter) {
+        this.inflater = LayoutInflater.from(fragment.getContext());
+        this.fragment = fragment;
         this.presenter = presenter;
 
         this.setHasStableIds(true);
@@ -58,6 +61,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
 
         this.presenter.deleteItem(position);
 
-        this.notifyItemRemoved(position + 1);
+        if (this.presenter.getSize() == 0) {
+            this.fragment.showEmptyText();
+        }
+
+        this.notifyItemRemoved(position);
     }
 }
