@@ -213,4 +213,6 @@ public class MangaDetailFragment extends Fragment implements View.OnClickListene
 
         toast.show();
     }
+
+    public MangaRaw getMangaRaw(){return this.mangaRaw;}
 }

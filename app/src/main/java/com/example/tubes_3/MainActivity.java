@@ -55,10 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
-        FragmentTransaction ft = this.fragmentManager.beginTransaction();
-        int fragmentStack_count = this.fragmentManager.getBackStackEntryCount();
-        Log.d("onBackPressed: ",fragmentStack_count+"");
-        if(fragmentStack_count<=1){
+        if(this.homeFragment.isVisible()){
             AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
             alertDialog.setTitle("Are you sure to quit?");
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
@@ -75,8 +72,10 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
             alertDialog.show();
-        } else {
+        } else if(this.mangaDetailFragment.isVisible()){
             this.handleToHomepage();
+        } else {
+            this.handleToMangaDetail(this.mangaDetailFragment.getMangaRaw());
         }
     }
 
@@ -130,19 +129,16 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction ft = this.fragmentManager.beginTransaction();
 
         if (this.mangaReadFragment != null && this.mangaReadFragment.isAdded()) {
-            ft.hide(this.mangaReadFragment);
+            ft.remove(this.mangaReadFragment);
         }
 
         if(this.mangaDetailFragment != null && this.mangaDetailFragment.isAdded()){
-            ft.hide(this.mangaDetailFragment);
+            ft.remove(this.mangaDetailFragment);
         }
 
 
-        if (this.homeFragment == null ) {
-            this.homeFragment = new HomeFragment();
-        }
-
-        if(!this.homeFragment.isAdded()) ft.add(R.id.fragment_container,this.homeFragment, null).addToBackStack("home");
+        this.homeFragment = new HomeFragment();
+        ft.add(R.id.fragment_container,this.homeFragment).addToBackStack(null);
 
         ft.show(this.homeFragment);
 
@@ -160,12 +156,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (this.mangaReadFragment != null && this.mangaReadFragment.isAdded()) {
-            ft.hide(this.mangaReadFragment);
+            ft.remove(this.mangaReadFragment);
         }
 
         this.mangaDetailFragment = new MangaDetailFragment(mangaRaw);
 
-        ft.add(R.id.fragment_container, this.mangaDetailFragment, null).addToBackStack("details");
+        ft.add(R.id.fragment_container, this.mangaDetailFragment).addToBackStack("");
 
         ft.commit();
 
@@ -187,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
 
         this.mangaReadFragment = new MangaReadFragment(ch);
 
-        ft.add(R.id.fragment_container, this.mangaReadFragment, null).addToBackStack("read");
+        ft.add(R.id.fragment_container, this.mangaReadFragment).addToBackStack("");
 
         ft.commit();
     }
