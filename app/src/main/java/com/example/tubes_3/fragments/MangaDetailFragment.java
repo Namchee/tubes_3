@@ -110,9 +110,6 @@ public class MangaDetailFragment extends Fragment implements View.OnClickListene
 
         this.loader.setVisibility(View.VISIBLE);
 
-        this.getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
         ServiceWorker.getInstance(this.getContext()).getMangaDetail(mangaRaw.getId());
     }
 
@@ -126,8 +123,6 @@ public class MangaDetailFragment extends Fragment implements View.OnClickListene
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(MangaDetailResponseMessage mangaDetailResponseMessage) {
         this.loader.setVisibility(View.GONE);
-
-        this.getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
         MangaDetail mangaDetail = mangaDetailResponseMessage.getMangaDetail();
 

@@ -113,11 +113,17 @@ public class MangaStorage {
 
         historyList.add(history);
 
-        String newHistoryString = this.gson.toJson(historyList);
+        List<String> historyStringList = new ArrayList<>();
+
+        for (HistoryRaw raws: historyList) {
+            historyStringList.add(this.gson.toJson(raws));
+        }
+
+        String newHistoryString = this.gson.toJson(historyStringList);
 
         SharedPreferences.Editor editor = this.sharedPref.edit();
 
-        editor.putString(KEY_FAV, newHistoryString);
+        editor.putString(KEY_HISTORY, newHistoryString);
 
         editor.commit();
     }
@@ -144,8 +150,10 @@ public class MangaStorage {
 
         SharedPreferences.Editor editor = this.sharedPref.edit();
 
-        editor.putString(KEY_FAV, newHistoryString);
+        editor.putString(KEY_HISTORY, newHistoryString);
 
         editor.commit();
+
+        System.out.println(this.getHistories().size());
     }
 }

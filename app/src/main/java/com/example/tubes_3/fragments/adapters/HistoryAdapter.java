@@ -58,6 +58,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolder> {
 
         this.presenter.deleteItem(position);
 
-        this.notifyItemRemoved(position);
+        this.notifyItemRemoved(position + 1);
     }
 }
