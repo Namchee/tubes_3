@@ -87,6 +87,10 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this.getContext(), R.array.sort_criteria, android.R.layout.simple_spinner_dropdown_item);
         this.sortCategory.setAdapter(arrayAdapter);
 
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            this.loader.setPadding(196, 196, 196, 196);
+        }
+
         this.searchInput.setEnabled(false);
 
         return view;
@@ -106,6 +110,7 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
         EventBus.getDefault().register(this);
 
         this.showLoadingSpinner();
+        this.disableSearchSortFeatures();
 
         this.setPageSize(0);
 
@@ -126,23 +131,7 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         this.showLoadingSpinner();
 
-        Comparator<MangaRaw> comparator = null;
-        switch (i) {
-            case 0:
-                comparator = new HitsSorter();
-                break;
-            case 1:
-                comparator = new LastUpdatedSorter(); //TODO: fix this damn thing!
-                break;
-            case 2:
-                comparator = new LexicographicSorter();
-                break;
-            case 3:
-                comparator = new ReverseLexicographicSorter();
-                break;
-        }
-
-        this.presenter.sort(comparator);
+        this.presenter.sort(this.getComparator(i));
 
         this.adapter = new MangaAdapter(this.getContext(), this.presenter);
         this.adapter.setSearchableFragment(this);
@@ -166,6 +155,10 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
     @Subscribe
     public void handleMangaAllResponseMessage(MangaListResponseMessage mangaListResponseMessage) {
         this.hideLoadingSpinner();
+        this.enableSearchSortFeatures();
+
+        this.searchInput.setQuery("", true);
+        this.sortCategory.setSelection(0);
 
         List<MangaRaw> raws = mangaListResponseMessage.getMangaRawList();
 
@@ -180,8 +173,8 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
 
         this.mangaView.setAdapter(animationAdapter);
 
-        ScaleInAnimator scaleInAnimator = new ScaleInAnimator();
-        this.mangaView.setItemAnimator(scaleInAnimator);
+        LandingAnimator landingAnimator = new LandingAnimator();
+        this.mangaView.setItemAnimator(landingAnimator);
 
         this.setPageSize(this.presenter.getSize());
 
@@ -225,8 +218,8 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
 
     @Override
     public void onRefresh() {
+        this.disableSearchSortFeatures();
         this.presenter.clearPresenter();
-        this.adapter.notifyDataSetChanged();
 
         this.setPageSize(0);
 
@@ -241,5 +234,38 @@ public class DisplayFragment extends Fragment implements Spinner.OnItemSelectedL
     @Override
     public void hideLoadingSpinner() {
         this.loader.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void disableSearchSortFeatures() {
+        this.searchInput.setEnabled(false);
+        this.sortCategory.setEnabled(false);
+    }
+
+    @Override
+    public void enableSearchSortFeatures() {
+        this.searchInput.setEnabled(true);
+        this.sortCategory.setEnabled(true);
+    }
+
+    public Comparator<MangaRaw> getComparator(int idx) {
+        Comparator<MangaRaw> comparator = null;
+
+        switch (idx) {
+            case 0:
+                comparator = new HitsSorter();
+                break;
+            case 1:
+                comparator = new LastUpdatedSorter();
+                break;
+            case 2:
+                comparator = new LexicographicSorter();
+                break;
+            case 3:
+                comparator = new ReverseLexicographicSorter();
+                break;
+        }
+
+        return comparator;
     }
 }

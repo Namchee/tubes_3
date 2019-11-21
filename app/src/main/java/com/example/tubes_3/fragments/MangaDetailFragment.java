@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Html;
+import android.text.format.DateUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +39,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,6 +56,7 @@ public class MangaDetailFragment extends Fragment implements View.OnClickListene
     @BindView(R.id.detail_manga_author) TextView tvAuthor;
     @BindView(R.id.detail_manga_artist) TextView tvArtist;
     @BindView(R.id.detail_manga_status) TextView tvStatus;
+    @BindView(R.id.detail_manga_created) TextView tvCreated;
     @BindView(R.id.detail_manga_last) TextView tvLast;
     @BindView(R.id.detail_manga_hits) TextView tvHits;
     @BindView(R.id.detail_manga_categories) ChipGroup cgCategory;
@@ -86,8 +89,6 @@ public class MangaDetailFragment extends Fragment implements View.OnClickListene
         this.unbinder = ButterKnife.bind(this, view);
 
         this.preferences = new MangaStorage(this.getContext());
-
-        System.out.println(savedInstanceState == null);
 
         this.tvSynopsis.setMovementMethod(new ScrollingMovementMethod());
 
@@ -142,9 +143,12 @@ public class MangaDetailFragment extends Fragment implements View.OnClickListene
         this.tvStatus.setText(mangaDetail.getStatus());
         this.tvSynopsis.setText(Html.fromHtml(mangaDetail.getDesc()));
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
 
-        this.tvLast.setText(dateFormat.format(mangaDetail.getLastUpdated()));
+        this.tvCreated.setText(dateFormat.format(mangaDetail.getCreatedAt()));
+
+        this.tvLast.setText(DateUtils.getRelativeTimeSpanString(mangaDetail.getLastUpdated().getTime()));
+
         this.tvHits.setText(new DecimalFormat("#,###.#").format(mangaDetail.getHits()));
 
         for (String category: mangaDetail.getCategories()) {
@@ -192,21 +196,33 @@ public class MangaDetailFragment extends Fragment implements View.OnClickListene
             this.favoriteButton.setIconResource(R.drawable.ic_favorite_border);
             this.favoriteButton.setIconTintResource(android.R.color.black);
 
-            this.makeToast(false);
+            this.makeToast(1);
         } else {
-            this.preferences.saveFavorite(this.mangaRaw.getId());
+            if (this.preferences.getFavoritesSize() >= 3) {
+                this.makeToast(2);
+                return;
+            }
+
+            try {
+                this.preferences.saveFavorite(this.mangaRaw.getId());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             this.favoriteButton.setIconResource(R.drawable.ic_favorite);
             this.favoriteButton.setIconTintResource(android.R.color.holo_red_dark);
 
-            this.makeToast(true);
+            this.makeToast(0);
         }
     }
 
-    private void makeToast(boolean saved) {
+    private void makeToast(int saved) {
         String text = "Saved to favorites";
 
-        if (!saved) {
+        if (saved == 1) {
             text = "Removed from favorites";
+        } else if (saved == 2) {
+            text = "You already have 3 favorites";
         }
 
         Toast toast = Toast.makeText(this.getContext(), text, Toast.LENGTH_SHORT);

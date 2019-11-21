@@ -4,4 +4,6 @@ public interface SearchableFragment {
     void setPageSize(int pageSize);
     void showLoadingSpinner();
     void hideLoadingSpinner();
+    void disableSearchSortFeatures();
+    void enableSearchSortFeatures();
 }

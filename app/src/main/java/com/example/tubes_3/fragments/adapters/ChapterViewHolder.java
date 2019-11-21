@@ -25,6 +25,14 @@ public class ChapterViewHolder extends RecyclerView.ViewHolder {
         super(view);
 
         ButterKnife.bind(this, view);
+
+        if (this.tvDetail == null) {
+            this.tvDetail = view.findViewById(R.id.chapter_detail);
+        }
+
+        if (this.tvDate == null) {
+            this.tvDate = view.findViewById(R.id.chapter_date);
+        }
     }
 
     public void setChapter(Chapter chapter) {

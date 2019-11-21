@@ -39,10 +39,6 @@ public class MainActivity extends AppCompatActivity {
     MangaDetailFragment mangaDetailFragment;
     MangaReadFragment mangaReadFragment;
 
-    public static final int HOME_FRAGMENT_ID = 11;
-    public static final int MANGA_DETAIL_ID = 12;
-    public static final int MANGA_READ_ID = 13;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -152,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         ft.setCustomAnimations(R.anim.fragment_animation_in, R.anim.fragment_animation_out);
 
         if (this.homeFragment != null && this.homeFragment.isAdded()) {
-            ft.hide(this.homeFragment);
+            ft.remove(this.homeFragment);
         }
 
         if (this.mangaReadFragment != null && this.mangaReadFragment.isAdded()) {

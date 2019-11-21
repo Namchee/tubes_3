@@ -36,9 +36,13 @@ public class MangaStorage {
         return favs;
     }
 
-    public void saveFavorite(String id){
+    public void saveFavorite(String id) throws Exception {
         SharedPreferences.Editor editor = this.sharedPref.edit();
         List<String> prevFavorites = this.getFavorites();
+
+        if (prevFavorites.size() >= 3) {
+            throw new Exception("Favorite exceeds 3");
+        }
 
         prevFavorites.add(id);
 
@@ -79,6 +83,10 @@ public class MangaStorage {
         editor.putString(KEY_FAV, this.gson.toJson(favorites));
 
         editor.commit();
+    }
+
+    public int getFavoritesSize() {
+        return this.getFavorites().size();
     }
 
     public List<HistoryRaw> getHistories() {
