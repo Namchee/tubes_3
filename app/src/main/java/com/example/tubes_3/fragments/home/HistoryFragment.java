@@ -5,12 +5,14 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.tubes_3.R;
 import com.example.tubes_3.fragments.adapters.HistoryAdapter;
@@ -38,6 +40,7 @@ import jp.wasabeef.recyclerview.animators.LandingAnimator;
 public class HistoryFragment extends Fragment {
     @BindView(R.id.history_list) RecyclerView historyView;
     @BindView(R.id.history_progress_loader) ProgressBar loader;
+    @BindView(R.id.no_history_text) TextView tvNo;
 
     Unbinder unbinder;
 
@@ -99,11 +102,22 @@ public class HistoryFragment extends Fragment {
 
         List<HistoryDetail> historyDetails = message.getHistoryDetails();
 
+        if (historyDetails.size() > 0) {
+            this.tvNo.setVisibility(View.GONE);
+        } else {
+            this.tvNo.setVisibility(View.VISIBLE);
+        }
+
         this.presenter = new HistoryPresenter(historyDetails);
         this.adapter = new HistoryAdapter(this.getContext(), this.presenter);
 
         ItemTouchHelper helper = new ItemTouchHelper(new SwipeToDeleteCallback(this.adapter));
         helper.attachToRecyclerView(this.historyView);
+
+        LinearLayoutManager llm = new LinearLayoutManager(this.getContext());
+        llm.setOrientation(RecyclerView.VERTICAL);
+        this.historyView.setLayoutManager(llm);
+        this.historyView.setAdapter(this.adapter);
 
         this.adapter.notifyDataSetChanged();
     }

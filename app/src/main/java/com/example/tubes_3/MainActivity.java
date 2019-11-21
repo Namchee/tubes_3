@@ -132,7 +132,6 @@ public class MainActivity extends AppCompatActivity {
             ft.remove(this.mangaDetailFragment);
         }
 
-
         this.homeFragment = new HomeFragment();
         ft.add(R.id.fragment_container,this.homeFragment).addToBackStack(null);
 
