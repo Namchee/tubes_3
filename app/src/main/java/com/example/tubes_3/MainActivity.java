@@ -170,11 +170,11 @@ public class MainActivity extends AppCompatActivity {
         ft.setCustomAnimations(R.anim.fragment_animation_in, R.anim.fragment_animation_out);
 
         if (this.homeFragment != null && this.homeFragment.isAdded()) {
-            ft.hide(this.homeFragment);
+            ft.remove(this.homeFragment);
         }
 
         if (this.mangaDetailFragment != null && this.mangaDetailFragment.isAdded()) {
-            ft.hide(this.mangaDetailFragment);
+            ft.remove(this.mangaDetailFragment);
         }
 
         this.mangaReadFragment = new MangaReadFragment(ch);
