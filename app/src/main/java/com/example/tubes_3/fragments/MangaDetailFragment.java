@@ -90,8 +90,6 @@ public class MangaDetailFragment extends Fragment implements View.OnClickListene
 
         this.preferences = new MangaStorage(this.getContext());
 
-        System.out.println(savedInstanceState == null);
-
         this.tvSynopsis.setMovementMethod(new ScrollingMovementMethod());
 
         return view;

@@ -103,11 +103,15 @@ public class MainActivity extends AppCompatActivity {
         ft.setCustomAnimations(R.anim.fragment_animation_in, R.anim.fragment_animation_out);
 
         if (this.homeFragment != null && this.homeFragment.isAdded()) {
-            ft.hide(this.homeFragment);
+            ft.remove(this.homeFragment);
         }
 
         if (this.mangaReadFragment != null && this.mangaReadFragment.isAdded()) {
-            ft.hide(this.mangaReadFragment);
+            ft.remove(this.mangaReadFragment);
+        }
+
+        if (this.mangaDetailFragment != null && this.mangaDetailFragment.isAdded()) {
+            ft.remove(this.mangaDetailFragment);
         }
 
         this.mangaDetailFragment = new MangaDetailFragment(mangaRaw);
@@ -120,5 +124,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void handleToChapterRead() {
         //TODO: implement!
+    }
+
+    @Override
+    public void onBackPressed(){
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1){
+            finish();
+        }
+        else {
+            super.onBackPressed();
+        }
     }
 }
