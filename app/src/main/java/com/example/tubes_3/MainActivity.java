@@ -36,10 +36,6 @@ public class MainActivity extends AppCompatActivity {
     MangaDetailFragment mangaDetailFragment;
     MangaReadFragment mangaReadFragment;
 
-    public static final int HOME_FRAGMENT_ID = 11;
-    public static final int MANGA_DETAIL_ID = 12;
-    public static final int MANGA_READ_ID = 13;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

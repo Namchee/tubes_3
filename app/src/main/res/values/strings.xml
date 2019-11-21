@@ -17,4 +17,10 @@
 
     <string name="no_favorites_label">You have no favorite(s) :(</string>
     <string name="no_history_label">You have no history(ies) :(</string>
+    <string name="artist_label">Artist</string>
+    <string name="author_label">Author</string>
+    <string name="last_updated_label">Last Updated</string>
+    <string name="created_at_label">Created At</string>
+    <string name="hits_label">Hits</string>
+    <string name="status_label">Status</string>
 </resources>

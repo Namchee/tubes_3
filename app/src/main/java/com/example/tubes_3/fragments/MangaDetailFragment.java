@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Html;
+import android.text.format.DateUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +39,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,6 +56,7 @@ public class MangaDetailFragment extends Fragment implements View.OnClickListene
     @BindView(R.id.detail_manga_author) TextView tvAuthor;
     @BindView(R.id.detail_manga_artist) TextView tvArtist;
     @BindView(R.id.detail_manga_status) TextView tvStatus;
+    @BindView(R.id.detail_manga_created) TextView tvCreated;
     @BindView(R.id.detail_manga_last) TextView tvLast;
     @BindView(R.id.detail_manga_hits) TextView tvHits;
     @BindView(R.id.detail_manga_categories) ChipGroup cgCategory;
@@ -142,9 +145,12 @@ public class MangaDetailFragment extends Fragment implements View.OnClickListene
         this.tvStatus.setText(mangaDetail.getStatus());
         this.tvSynopsis.setText(Html.fromHtml(mangaDetail.getDesc()));
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
 
-        this.tvLast.setText(dateFormat.format(mangaDetail.getLastUpdated()));
+        this.tvCreated.setText(dateFormat.format(mangaDetail.getCreatedAt()));
+
+        this.tvLast.setText(DateUtils.getRelativeTimeSpanString(mangaDetail.getLastUpdated().getTime()));
+
         this.tvHits.setText(new DecimalFormat("#,###.#").format(mangaDetail.getHits()));
 
         for (String category: mangaDetail.getCategories()) {
