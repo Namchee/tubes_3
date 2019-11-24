@@ -68,10 +68,14 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
             alertDialog.show();
-        } else if(this.mangaDetailFragment.isVisible()){
+        } else if (this.mangaDetailFragment != null && this.mangaDetailFragment.isVisible()){
             this.handleToHomepage();
         } else {
-            this.handleToMangaDetail(this.mangaDetailFragment.getMangaRaw());
+            if (this.mangaDetailFragment != null) {
+                this.handleToMangaDetail(this.mangaDetailFragment.getMangaRaw());
+            } else {
+                this.handleToHomepage();
+            }
         }
     }
 

@@ -34,6 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import jp.wasabeef.recyclerview.animators.LandingAnimator;
+import jp.wasabeef.recyclerview.animators.ScaleInAnimator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -113,7 +114,7 @@ public class HistoryFragment extends Fragment implements View.OnClickListener {
         this.presenter = new HistoryPresenter(historyDetails);
         this.adapter = new HistoryAdapter(this, this.presenter);
 
-        LandingAnimator animator = new LandingAnimator();
+        ScaleInAnimator animator = new ScaleInAnimator();
 
         ItemTouchHelper helper = new ItemTouchHelper(new SwipeToDeleteCallback(this.adapter));
         helper.attachToRecyclerView(this.historyView);
