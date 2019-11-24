@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
-        if(this.homeFragment.isVisible()){
+        if (this.homeFragment.isVisible()) {
             AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
             alertDialog.setTitle("Are you sure to quit?");
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
             alertDialog.show();
-        } else if (this.mangaDetailFragment != null && this.mangaDetailFragment.isVisible()){
+        } else if (this.mangaDetailFragment != null && (this.mangaDetailFragment.isVisible() || this.mangaDetailFragment.isRemoving())) {
             this.handleToHomepage();
         } else {
             if (this.mangaDetailFragment != null) {
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
             ft.remove(this.mangaReadFragment);
         }
 
-        if(this.mangaDetailFragment != null && this.mangaDetailFragment.isAdded()){
+        if (this.mangaDetailFragment != null && this.mangaDetailFragment.isAdded()){
             ft.remove(this.mangaDetailFragment);
         }
 
@@ -163,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
         ft.add(R.id.fragment_container, this.mangaDetailFragment).addToBackStack("");
 
         ft.commit();
-
     }
 
     public void handleToChapterRead(Chapter ch) {
